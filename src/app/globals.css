@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Neutral, calm — near-black on white with gray secondary text.
+     Soft/faint are kept a touch darker to stay legible at light font weights. */
+  --paper: #ffffff;
+  --paper-raised: #f6f6f6;
+  --ink: #141414;
+  --ink-soft: #4a4a4a;
+  --ink-faint: #8f8f8f;
+  --line: #e6e6e6;
+  --accent: #141414; /* accent = ink; color is not used decoratively */
+}
+
+.dark {
+  --paper: #0d0d0d;
+  --paper-raised: #161616;
+  --ink: #f4f4f4;
+  --ink-soft: #b4b4b4;
+  --ink-faint: #767676;
+  --line: #262626;
+  --accent: #f4f4f4;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 400; /* regular base for legible body copy; headings stay semibold */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Thin, quiet scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+  border: 3px solid var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Small label / subtext — monospace accent (JetBrains Mono) */
+.label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+/* Meta band (Role / Timeline / etc.) — uniform grey wash between dividers */
+.accent-bg {
+  background-color: var(--paper-raised);
+}
+
+/* Simple underline on hover for links */
+.link-underline {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.link-underline:hover {
+  border-color: currentColor;
+}
+
+/* Image pulse for emphasized case-study frames */
+@keyframes image-emphasis {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.025);
+    filter: brightness(1.04);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+}
+
+.animate-image-emphasis {
+  animation: image-emphasis 3s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-image-emphasis {
+    animation: none;
+  }
+}
+
+/* Subtle pulse for emphasized case-study frames */
+@keyframes subtle-emphasis {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ink) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--ink) 7%, transparent);
+  }
+}
+
+.animate-subtle-emphasis {
+  animation: subtle-emphasis 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-subtle-emphasis {
+    animation: none;
+  }
+}

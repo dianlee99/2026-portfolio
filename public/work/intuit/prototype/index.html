@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MM Template Customization — Prototype</title>
+<style>
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 400; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Regular.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 400; font-style: italic; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Italic.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 500; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Medium.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 500; font-style: italic; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-MediumIt.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 600; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Demi.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 700; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Bold.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 700; font-style: italic; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-BoldIt.otf') format('opentype'); }
+@font-face { font-family: 'AvenirNext forINTUIT'; font-weight: 800; src: url('node_modules/@fuego/ttds-avenir/src/fonts/AvenirNextforINTUIT-Heavy.otf') format('opentype'); }
+/* ── GBSG / IDS Design Tokens ── */
+:root {
+  /* Colors — GBSG green theme (matches Figma) */
+  --color-action-standard: #003e31;
+  --color-action-standard-hover: #00533f;
+  --color-action-standard-subtle: rgba(0,133,109,0);
+  --color-action-standard-subtle-hover: rgba(0,133,109,0.08);
+  --color-action-primary-bg: #003e31;
+  --color-text-inverse: #ffffff;
+  --color-text-primary: #21262a;
+  --color-text-secondary: #4c555b;
+  --color-text-disabled: #8d9096;
+  --color-icon-primary: #21262a;
+  --color-icon-secondary: #4c555b;
+  --color-ui-neutral: #5d686f;
+  --color-container-background-primary: #ffffff;
+  --color-container-background-secondary: #f4f5f8;
+  --color-input-background-primary: #ffffff;
+  --color-input-border-primary: #c3ced5;
+  --color-input-border-focus: #003e31;
+  --color-input-border-hover: #4c555b;
+  --color-input-label: #5d686f;
+  --color-border-primary: #d5dee3;
+  --color-border-secondary: #d5dee3;
+  --color-container-border-primary: #c3ced5;
+  --color-divider-primary: #adbac2;
+  --color-divider-tertiary: #d5dee3;
+  --color-switch-on: #003e31;
+  --color-switch-off: #8d9096;
+  --color-switch-thumb: #ffffff;
+  --color-interactive-focus: rgba(0,62,49,0.15);
+  --color-surface-raised: #ffffff;
+  --color-nav-selected-bg: #e3efeb;
+  --color-nav-selected-text: #003e31;
+  --color-link-primary: #0365ac;
+  --color-link-hover: #024a80;
+  --color-container-border-tertiary: #babec5;
+  --color-container-background-tertiary: #eceef1;
+  --color-action-passive-hover: #d5dee3;
+
+  /* Spacing */
+  --space-x-small: 8px;
+  --space-small: 12px;
+  --space-medium: 16px;
+  --space-large: 24px;
+  --space-component-gap-small: 4px;
+  --space-component-inline-padding-x-large: 12px;
+  --space-component-stack-padding-medium: 6px;
+  --space-component-inline-padding-small: 6px;
+
+  /* Radii */
+  --radius-action: 4px;
+  --radius-input: 4px;
+  --radius-container: 8px;
+  --radius-ai-icon: 6px;
+
+  /* Typography */
+  --font-family: 'AvenirNext forINTUIT', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* GBSG type ramp: 12 / 14 / 16 / 20 */
+  --font-size-action-medium: 14px;
+  --font-size-body: 14px;
+  --font-size-component-medium: 14px;
+  --font-size-small: 12px;
+  --font-size-xsmall: 12px;
+  --font-size-heading: 16px;
+  --font-size-label: 14px;
+  --font-weight-medium: 500;
+  --font-weight-demi: 600;
+  --font-weight-bold: 700;
+  --line-height-action: 1.3;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+button, input, select, textarea { font-family: var(--font-family); }
+
+html {
+  margin: 0;
+  padding: 0;
+  background: #f4f5f8;
+}
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #f4f5f8;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body);
+}
+#scale-root {
+  position: relative;
+}
+
+/* ══════════════════════════════════════════
+   GBSG COMPONENT PRIMITIVES
+══════════════════════════════════════════ */
+
+/* ── Button - Primary ── */
+.ids-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-component-gap-small);
+  height: 36px;
+  min-width: 60px;
+  padding: 0 16px;
+  border-radius: var(--radius-action);
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-action);
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.ids-btn-primary {
+  background: var(--color-action-primary-bg);
+  color: var(--color-text-inverse);
+}
+.ids-btn-primary:hover { background: var(--color-action-standard-hover); }
+
+.ids-btn-secondary {
+  background: var(--color-action-standard-subtle);
+  border: 1px solid var(--color-action-standard);
+  color: var(--color-action-standard);
+}
+.ids-btn-secondary:hover { background: var(--color-action-standard-subtle-hover); }
+
+.ids-btn-tertiary {
+  background: var(--color-action-standard-subtle);
+  color: var(--color-action-standard);
+  border: none;
+}
+.ids-btn-tertiary:hover { background: var(--color-action-standard-subtle-hover); }
+
+/* Small size variant */
+.ids-btn-sm {
+  min-height: 24px;
+  font-size: var(--font-size-small);
+  padding: 3px 8px;
+}
+
+/* ── Split Button ── */
+.ids-btn-split {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: var(--radius-action);
+  overflow: hidden;
+}
+.ids-btn-split .main-part {
+  background: var(--color-action-standard-subtle);
+  border: 1px solid var(--color-action-standard);
+  border-right: none;
+  border-radius: var(--radius-action) 0 0 var(--radius-action);
+  color: var(--color-action-standard);
+  height: 36px;
+  padding: 0 16px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ids-btn-split .main-part:hover { background: var(--color-action-standard-subtle-hover); }
+.ids-btn-split .caret-part {
+  background: var(--color-action-standard-subtle);
+  border: 1px solid var(--color-action-standard);
+  border-radius: 0 var(--radius-action) var(--radius-action) 0;
+  color: var(--color-action-standard);
+  padding: 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+}
+.ids-btn-split .caret-part:hover { background: var(--color-action-standard-subtle-hover); }
+.ids-btn-split.primary .main-part {
+  background: var(--color-action-primary-bg);
+  border-color: var(--color-action-primary-bg);
+  color: var(--color-text-inverse);
+}
+.ids-btn-split.primary .main-part:hover { background: var(--color-action-standard-hover); }
+.ids-btn-split.primary .caret-part {
+  background: var(--color-action-primary-bg);
+  border-color: var(--color-action-primary-bg);
+  border-left-color: rgba(255,255,255,0.3);
+  color: var(--color-text-inverse);
+}
+.ids-btn-split.primary .caret-part:hover { background: var(--color-action-standard-hover); }
+.ids-btn-split.ids-btn-split-secondary .main-part,
+.ids-btn-split.ids-btn-split-secondary .caret-part {
+  background: var(--color-container-background-secondary);
+  border-color: var(--color-input-border-primary);
+  color: var(--color-text-primary);
+}
+.ids-btn-split.ids-btn-split-secondary .main-part:hover,
+.ids-btn-split.ids-btn-split-secondary .caret-part:hover { background: var(--color-action-passive-hover, #d5dee3); }
+
+/* ── Icon Control Button ── */
+.ids-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-action);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background 0.15s;
+}
+.ids-icon-btn:hover { background: var(--color-container-background-secondary); }
+.ids-icon-btn svg { display: block; }
+
+/* ── Text Field ── */
+.ids-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ids-field-label {
+  font-size: 14px;
+  color: var(--color-input-label, #6b6c72);
+  font-weight: 400;
+  line-height: 1.3;
+}
+.ids-field-input {
+  border: 1px solid #C3CED5;
+  border-radius: var(--radius-input);
+  padding: 0 12px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-container-background-primary);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  line-height: 1.3;
+  height: 36px;
+  max-height: 36px;
+  border-radius: 6px;
+}
+.ids-field-input:focus {
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 2px var(--color-interactive-focus);
+}
+.ids-field-input:hover:not(:focus) { border-color: var(--color-input-border-hover); }
+.ids-field-input.with-chevron {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235d686f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.ids-field-input.with-calendar {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%235d686f' stroke-width='1.5' viewBox='0 0 16 16'%3E%3Crect x='2' y='3' width='12' height='11' rx='1.5'/%3E%3Cpath d='M2 6h12M5 1.5v3M11 1.5v3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+
+/* Textarea */
+.ids-textarea {
+  border: 1px solid var(--color-input-border-primary);
+  border-radius: var(--radius-input);
+  padding: 9px 12px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  background: var(--color-container-background-primary);
+  width: 100%;
+  outline: none;
+  resize: none;
+  transition: border-color 0.15s;
+  min-height: 72px;
+}
+.ids-textarea:focus {
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 2px var(--color-interactive-focus);
+}
+
+/* ── Switch ── */
+.ids-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.ids-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.ids-switch-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  background: var(--color-switch-off);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ids-switch input:checked ~ .ids-switch-track { background: var(--color-switch-on); }
+.ids-switch-thumb {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: var(--color-switch-thumb);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: left 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+.ids-switch input:checked ~ .ids-switch-thumb { left: 16px; }
+.ids-switch input:focus-visible ~ .ids-switch-track {
+  box-shadow: 0 0 0 2px var(--color-interactive-focus);
+}
+
+/* ── Segmented Button ── */
+.ids-segmented {
+  display: inline-flex;
+  background: #eceef1;
+  border-radius: 4px;
+  padding: 2px;
+  gap: 2px;
+  isolation: isolate;
+}
+.ids-segmented-item {
+  padding: 5px 14px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  min-height: 28px;
+  white-space: nowrap;
+  line-height: 1.3;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.ids-segmented-item:hover { background: rgba(0,0,0,0.04); }
+.ids-segmented-item.active {
+  background: white;
+  color: var(--color-text-primary, #393a3d);
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+}
+
+/* ── AI / Intuit Intelligence icon button ── */
+.ids-ai-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-ai-icon);
+  border: none;
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.ids-ai-btn img { display: block; width: 36px; height: 36px; }
+.ids-ai-btn:hover { opacity: 0.85; }
+.ids-ai-icon {
+  width: 24px;
+  height: 24px;
+  background: conic-gradient(from 135deg, #a78bfa, #2d6ff4, #a78bfa);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Link ── */
+.ids-link {
+  color: var(--color-link-primary, #0077c5);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  text-decoration: none;
+  line-height: 1.3;
+}
+.ids-link:hover { text-decoration: underline; }
+.ids-link-sm { font-size: 14px; }
+
+/* ── Accordion (IDS "Accordions" component) ── */
+/* Settings accordions — match Design panel (.accordion-item) */
+.ids-accordion {
+  border: 1px solid #d4d7dc;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  margin: 0 16px 12px;
+}
+.ids-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: var(--font-weight-demi);
+  user-select: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: #393a3d;
+  font-family: var(--font-family);
+  line-height: 1.3;
+}
+.ids-accordion-header:hover { background: #f8fafb; }
+.ids-accordion-chevron {
+  color: #6b6c72;
+  font-size: 16px;
+  transition: transform 0.2s;
+  line-height: 1;
+  margin-left: 8px;
+}
+.ids-accordion-header.open .ids-accordion-chevron { transform: rotate(180deg); }
+.ids-accordion-body { display: none; padding: 8px 16px 16px; }
+.ids-accordion-header.open + .ids-accordion-body { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Left Nav Rail (matches IDS Foundations 1355:187791) ── */
+.ids-nav-rail {
+  width: 69px;
+  border-right: 1px solid #d4d7dc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+  gap: 16px;
+  flex-shrink: 0;
+  background: var(--color-container-background-primary);
+}
+.ids-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-family);
+}
+/* IconControl Medium = 36×36 box with 24×24 icon */
+.ids-nav-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #393a3d;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  transition: background 120ms, border-color 120ms;
+}
+.ids-nav-icon-wrap svg { width: 24px; height: 24px; display: block; }
+.ids-nav-item:hover .ids-nav-icon-wrap { background: #f4f5f8; }
+.ids-nav-item.active .ids-nav-icon-wrap {
+  background: #f4f5f8;
+  border-color: #8d9096;
+  color: #393a3d;
+}
+.ids-nav-label {
+  font-size: 12px;
+  color: #6b6c72;
+  text-align: center;
+  line-height: 1.3;
+}
+.ids-nav-item.active .ids-nav-label { color: #393a3d; }
+
+/* ── Page Header / Topbar ── */
+.ids-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  border-bottom: 1px solid var(--color-divider-tertiary);
+  padding: 0 22px;
+  flex-shrink: 0;
+  background: var(--color-container-background-primary);
+}
+.ids-topbar-left { display: flex; align-items: center; gap: 16px; }
+.ids-topbar-right { display: flex; align-items: center; gap: 8px; }
+.ids-topbar-title { font-weight: var(--font-weight-medium); font-size: 16px; color: var(--color-text-primary); }
+.ids-badge {
+  background: var(--color-container-background-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-action);
+  font-size: var(--font-size-xsmall);
+  padding: 1px 6px;
+  font-weight: var(--font-weight-medium);
+}
+.ids-ai-status-chip {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: #4a2b8c;
+  background: #f0ebff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #c9b3f5;
+}
+
+/* ── Side Panel ── */
+.ids-panel {
+  width: 380px;
+  border-right: 1px solid #d4d7dc;
+  background: var(--color-container-background-primary);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  margin-left: -380px;
+  opacity: 0;
+  pointer-events: none;
+  transition: margin-left 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+              opacity 0.25s ease;
+}
+.ids-panel.open {
+  margin-left: 0;
+  opacity: 1;
+  pointer-events: auto;
+}
+.ids-panel > * { min-width: 380px; }
+.ids-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 16px 0;
+  font-weight: var(--font-weight-medium);
+  font-size: 20px;
+  color: #393a3d;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+.ids-panel-close {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b6c72;
+  font-size: 20px;
+  line-height: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ids-panel-close:hover { background: #f4f5f8; color: var(--color-text-primary); }
+.ids-panel-divider { height: 1px; background: #d4d7dc; margin: 16px 0; flex-shrink: 0; }
+.ids-panel-tabs {
+  display: flex;
+  margin: 16px 16px 12px;
+  padding: 3px;
+  gap: 3px;
+  background: var(--color-container-background-tertiary, #eceef1);
+  border-radius: 6px;
+}
+.ids-panel-tab {
+  flex: 1;
+  padding: 7px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  border: none;
+  background: none;
+  font-family: var(--font-family);
+}
+.ids-panel-tab.active {
+  background: var(--color-container-background-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  color: var(--color-text-primary);
+}
+
+/* ── Toggle rows in settings ── */
+.ids-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+.ids-toggle-row:last-child { border-bottom: none; }
+.ids-toggle-label { font-size: var(--font-size-body); font-weight: var(--font-weight-medium); line-height: 1.3; }
+.ids-toggle-sub { font-size: var(--font-size-xsmall); color: var(--color-text-secondary); margin-top: 2px; }
+
+/* ── Design Toolbar ── */
+.ids-design-toolbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--color-border-secondary);
+  background: var(--color-container-background-primary);
+  flex-shrink: 0;
+  gap: 16px;
+}
+.ids-design-toolbar.visible { display: flex; }
+.ids-tmpl-info { display: flex; align-items: center; gap: 6px; font-size: var(--font-size-body); }
+
+/* ── PDF Canvas Area ── */
+.ids-pdf-canvas {
+  flex: 1;
+  background: #6b7d8a;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 24px;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Zoom chip */
+.ids-zoom-chip {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--color-container-background-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 0 4px;
+}
+.ids-zoom-label { padding: 7px 10px; font-size: var(--font-size-small); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+.ids-zoom-track { width: 100px; height: 4px; background: var(--color-border-primary); margin: 0 8px; border-radius: 2px; position: relative; cursor: pointer; }
+.ids-zoom-track::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 75%; background: var(--color-action-standard); border-radius: 2px; }
+.ids-zoom-thumb { width: 14px; height: 14px; background: var(--color-action-standard); border-radius: 50%; position: absolute; top: -5px; left: 75%; transform: translateX(-50%); cursor: grab; }
+
+/* ── PDF Document ── */
+.ids-pdf-doc {
+  background: var(--color-container-background-primary);
+  width: 720px;
+  border-radius: 2px;
+  padding: 36px 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  font-size: 12px;
+  flex-shrink: 0;
+  font-family: var(--font-family);
+}
+.ids-pdf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.ids-pdf-title { font-size: 22px; font-weight: var(--font-weight-bold); letter-spacing: 2px; }
+.ids-pdf-company { color: var(--color-text-secondary); line-height: 1.6; font-size: 11px; margin-top: 10px; }
+.ids-pdf-logo {
+  width: 110px; height: 48px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: #f5a623; font-weight: 800; font-size: 14px; letter-spacing: 1px;
+}
+.ids-pdf-customer-name { font-size: 15px; font-weight: var(--font-weight-bold); margin-bottom: 10px; }
+.ids-pdf-meta-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+.ids-pdf-meta-hdr { font-weight: var(--font-weight-bold); font-size: 11px; margin-bottom: 4px; }
+.ids-pdf-meta-val { font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; }
+.ids-pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.ids-pdf-table th { font-size: 11px; font-weight: var(--font-weight-bold); padding: 8px; border-bottom: 2px solid var(--color-border-primary); text-align: left; }
+.ids-pdf-table td { padding: 8px; border-bottom: 1px solid var(--color-border-secondary); font-size: 11px; }
+.ids-pdf-table td.num { text-align: right; }
+.ids-pdf-table .sub-row td { color: var(--color-text-secondary); padding-left: 20px; font-size: 11px; }
+.ids-pdf-footer-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.ids-pdf-pay-label { font-size: 11px; font-weight: var(--font-weight-bold); margin-bottom: 6px; }
+.ids-pdf-pay-row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.ids-pdf-pay-chip { background: var(--color-container-background-secondary); border: 1px solid var(--color-border-primary); border-radius: 3px; padding: 2px 6px; font-size: 9px; font-weight: var(--font-weight-bold); }
+.ids-pdf-totals { text-align: right; min-width: 200px; }
+.ids-pdf-totals-row { display: flex; justify-content: space-between; gap: 24px; padding: 3px 0; font-size: 11px; }
+.ids-pdf-total-final { font-weight: var(--font-weight-bold); font-size: 13px; border-top: 1.5px solid var(--color-text-primary); padding-top: 6px; margin-top: 4px; }
+.ids-pdf-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 12px; }
+
+/* Inline PDF cell editing */
+.cell-selected { outline: 2px solid var(--color-action-standard); outline-offset: 1px; background: rgba(0,62,49,0.04); cursor: text; }
+.edit-toolbar-float { position: sticky; top: 8px; z-index: 20; display: none; justify-content: center; margin-bottom: -12px; }
+.edit-toolbar-float.visible { display: flex; }
+.edit-toolbar-inner {
+  background: #1a1a1a;
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.edit-tb-btn { background: none; border: none; color: #ccc; cursor: pointer; padding: 4px 6px; border-radius: 3px; font-size: 12px; font-weight: 600; font-family: var(--font-family); }
+.edit-tb-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
+.edit-tb-sep { width: 1px; height: 16px; background: rgba(255,255,255,.2); margin: 0 4px; }
+.edit-h1-select { background: #2a2a2a; border: none; color: #ccc; font-size: 11px; border-radius: 3px; padding: 2px 5px; cursor: pointer; font-family: var(--font-family); }
+
+/* ── AI Panel ── */
+.ids-ai-panel {
+  display: none;
+  flex-direction: column;
+  width: 360px;
+  border-left: 1px solid var(--color-border-secondary);
+  background: var(--color-container-background-primary);
+  flex-shrink: 0;
+}
+.ids-ai-panel.open { display: flex; }
+.ids-ai-panel-header { padding: 14px 16px; border-bottom: 1px solid var(--color-border-secondary); }
+.ids-ai-panel-title {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-demi);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ids-ai-beta { font-size: 10px; background: linear-gradient(135deg, #a78bfa, #2d6ff4); color: #fff; border-radius: 10px; padding: 2px 8px; }
+.ids-ai-subtitle { font-size: var(--font-size-small); color: var(--color-text-secondary); margin-top: 2px; }
+.ids-ai-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.ids-ai-msg { font-size: var(--font-size-body); line-height: 1.6; color: var(--color-text-primary); }
+.ids-ai-msg-bubble { background: var(--color-container-background-secondary); border-radius: var(--radius-container); padding: 12px; }
+.ids-ai-action-row { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.ids-ai-action-btn {
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-container-background-primary);
+  border-radius: var(--radius-action);
+  padding: 7px 12px;
+  font-size: var(--font-size-small);
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  text-align: left;
+  transition: border-color 0.15s;
+}
+.ids-ai-action-btn:hover { border-color: var(--color-action-standard); color: var(--color-action-standard); }
+.ids-ai-input-area { padding: 12px 16px; border-top: 1px solid var(--color-border-secondary); }
+.ids-ai-input-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-input-border-primary);
+  border-radius: var(--radius-container);
+  padding: 8px 12px;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+.ids-ai-input-row:focus-within { border-color: var(--color-input-border-focus); }
+.ids-ai-input { flex: 1; border: none; outline: none; font-size: var(--font-size-body); background: transparent; font-family: var(--font-family); color: var(--color-text-primary); }
+.ids-ai-send {
+  background: linear-gradient(135deg, #a78bfa, #2d6ff4);
+  border: none;
+  border-radius: var(--radius-action);
+  width: 28px; height: 28px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Template Cards ── */
+.ids-tmpl-card {
+  border: 1.5px solid var(--color-border-primary);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ids-tmpl-card:hover { border-color: var(--color-action-standard); }
+.ids-tmpl-card.selected { border-color: var(--color-action-standard); box-shadow: 0 0 0 1px var(--color-action-standard); }
+.ids-tmpl-thumb { background: var(--color-container-background-secondary); height: 140px; overflow: hidden; }
+.ids-tmpl-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-top: 1px solid var(--color-border-secondary);
+  background: var(--color-container-background-primary);
+}
+.ids-tmpl-name { font-weight: var(--font-weight-bold); font-size: var(--font-size-small); }
+.ids-default-badge {
+  font-size: 10px;
+  background: var(--color-nav-selected-bg);
+  color: var(--color-action-standard);
+  border: 1px solid #b3d7f0;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+.ids-tmpl-actions { display: flex; gap: 6px; }
+
+/* ── Design accordion sections ── */
+.ids-design-section {
+  margin: 0 16px 12px;
+  border: 1px solid var(--color-container-border-tertiary, #babec5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ids-design-section-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  cursor: pointer;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-demi);
+  background: var(--color-container-background-primary);
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+}
+.ids-design-section-hdr:hover { background: var(--color-container-background-secondary); }
+.ids-add-element {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px;
+  padding: 14px 0;
+  color: var(--color-link-primary, #0365ac);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  cursor: pointer;
+}
+.ids-add-element:hover { color: var(--color-action-standard); }
+
+/* ── Modal ── */
+.ids-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.ids-modal-overlay.open { display: flex; }
+.ids-modal {
+  background: var(--color-container-background-primary);
+  border-radius: var(--radius-container);
+  padding: 24px;
+  width: 600px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+}
+.ids-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.ids-modal-title { font-size: 16px; font-weight: var(--font-weight-demi); display: flex; align-items: center; gap: 8px; }
+.ids-modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--color-text-secondary); line-height: 1; }
+.ids-modal-close:hover { color: var(--color-text-primary); }
+.ids-modal-preview { background: var(--color-container-background-secondary); border-radius: var(--radius-container); padding: 20px; margin-bottom: 20px; }
+.ids-modal-footer { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ── Invoice Preview (inside modal) ── */
+.inv-preview { background: var(--color-container-background-primary); border-radius: 6px; padding: 20px; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.inv-preview-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.inv-preview-title { font-size: 16px; font-weight: var(--font-weight-bold); letter-spacing: 1px; }
+.inv-preview-logo { width: 80px; height: 36px; background: #1a1a1a; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #f5a623; font-weight: 800; font-size: 13px; }
+.inv-preview-company { font-size: 10px; color: var(--color-text-secondary); line-height: 1.5; margin-top: 8px; }
+.inv-preview-customer { font-weight: var(--font-weight-bold); font-size: 13px; margin-bottom: 8px; }
+.inv-meta-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; font-size: 10px; margin-bottom: 12px; }
+.inv-meta-hdr { font-weight: var(--font-weight-bold); font-size: 10px; margin-bottom: 3px; }
+.inv-meta-val { color: var(--color-text-secondary); line-height: 1.5; }
+.inv-table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 10px; }
+.inv-table th { border-bottom: 1px solid var(--color-border-primary); padding: 4px 6px; text-align: left; font-weight: var(--font-weight-bold); }
+.inv-table td { padding: 4px 6px; border-bottom: 1px solid var(--color-border-secondary); }
+
+/* ── Invoice Edit form ── */
+.form-section-title { font-size: 16px; font-weight: var(--font-weight-demi); color: var(--color-text-primary); margin: 36px 0 12px; line-height: 1.3; }
+.form-grid { display: grid; gap: 14px; }
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-grid-4 { grid-template-columns: repeat(4,1fr); }
+
+/* Payment bar */
+.payment-bar {
+  border: 1px solid var(--color-container-border-tertiary, #babec5);
+  border-radius: var(--radius-container);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background: var(--color-container-background-secondary);
+}
+.pm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pm-label { font-size: var(--font-size-small); font-weight: var(--font-weight-medium); color: var(--color-text-primary); margin-right: 2px; }
+.pm-logo { height: 21px; width: auto; display: block; }
+
+/* Products table */
+.ids-table { border-collapse: collapse; margin-bottom: 12px; table-layout: fixed; width: 100%; }
+.ids-table th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  padding: 0 8px;
+  height: 44px;
+  border-bottom: 1px solid var(--color-border-primary);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ids-table td {
+  padding: 0 8px;
+  height: 44px;
+  border-bottom: 1px solid var(--color-border-secondary);
+  vertical-align: middle;
+}
+.ids-table-input {
+  border: 1px solid #C3CED5;
+  border-radius: var(--radius-input);
+  padding: 0 12px;
+  font-size: var(--font-size-body);
+  font-family: var(--font-family);
+  width: 100%;
+  height: 36px;
+  min-height: 36px;
+  outline: none;
+  box-sizing: border-box;
+  background: var(--color-input-background-primary, white);
+}
+.ids-table-input:focus { border-color: var(--color-input-border-focus); box-shadow: 0 0 0 2px var(--color-interactive-focus); }
+.ids-table-input.ta-right { text-align: right; }
+.th-sort { color: var(--color-icon-secondary); font-size: 11px; margin-left: 2px; }
+.kebab-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-icon-secondary);
+  font-family: var(--font-family);
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+.kebab-btn:hover { background: var(--color-container-background-secondary); }
+.ids-field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235d686f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+/* Totals */
+.totals-row { display: flex; justify-content: space-between; padding: 0; font-size: 16px; }
+.totals-row.grand-total { font-weight: var(--font-weight-demi); border-top: 1px solid var(--color-border-primary); margin-top: 4px; padding-top: 8px; }
+
+/* ── Upload box ── */
+.ids-upload-box {
+  border: 1.5px dashed var(--color-border-primary);
+  border-radius: var(--radius-container);
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  transition: border-color 0.15s;
+}
+.ids-upload-box:hover { border-color: var(--color-action-standard); }
+.ids-upload-title { font-weight: var(--font-weight-medium); font-size: var(--font-size-body); color: var(--color-text-primary); margin-bottom: 4px; }
+
+/* ── Shell ── */
+.shell {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--color-container-background-primary);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.shell-body { display: flex; flex: 1; min-height: 0; }
+.shell-main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.screen { display: none; width: 100%; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* Attachment drop area */
+.attach-box {
+  border: 1px dashed var(--color-border-primary);
+  border-radius: var(--radius-container);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.attach-box:hover { border-color: var(--color-action-standard); }
+
+/* drag handle, delete */
+.drag-handle { color: var(--color-border-primary); cursor: grab; padding: 0 4px; }
+.delete-icon-btn { background: none; border: none; cursor: pointer; color: var(--color-border-primary); font-size: 16px; padding: 2px 6px; border-radius: 3px; }
+.delete-icon-btn:hover { color: #c0392b; background: #fdf0ef; }
+
+/* Invoice total right-aligned */
+.invoice-total-disp { font-size: 16px; color: var(--color-text-secondary); }
+
+/* view tabs in design toolbar */
+.ids-view-tabs { display: flex; gap: 3px; padding: 3px; background: var(--color-container-background-tertiary, #eceef1); border-radius: 6px; }
+.ids-view-tab { padding: 5px 16px; border: none; border-radius: 4px; background: transparent; font-size: 14px; font-family: var(--font-family); cursor: pointer; color: var(--color-text-secondary); font-weight: var(--font-weight-medium); }
+.ids-view-tab:hover { color: var(--color-text-primary); }
+.ids-view-tab.active { background: var(--color-container-background-primary); color: var(--color-text-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+
+/* tmpl tabs */
+.ids-tmpl-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.ids-tmpl-tab { flex: 1; padding: 6px; text-align: center; border-radius: var(--radius-action); cursor: pointer; font-size: var(--font-size-small); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); border: 1px solid transparent; background: none; font-family: var(--font-family); }
+.ids-tmpl-tab.active { border-color: var(--color-action-standard); color: var(--color-action-standard); background: var(--color-nav-selected-bg); }
+</style>
+</head>
+<body>
+
+<!-- ═══ MODAL: Template Preview ═══ -->
+<div class="ids-modal-overlay" id="tmplModal">
+  <div class="ids-modal">
+    <div class="ids-modal-header">
+      <div class="ids-modal-title">
+        Modern
+        <span class="ids-default-badge">Default</span>
+      </div>
+      <button class="ids-modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="ids-modal-preview">
+      <div class="inv-preview">
+        <div class="inv-preview-header">
+          <div>
+            <div class="inv-preview-title">INVOICE</div>
+            <div class="inv-preview-company">
+              <strong>Acme Construction LLC</strong><br>
+              123 E. Meadow Way, Palo Alto CA, 94306<br>
+              info@acmellc.com · 206-123-12345
+            </div>
+          </div>
+          <div class="inv-preview-logo">▲ CME</div>
+        </div>
+        <div class="inv-preview-customer">John Smith</div>
+        <div class="inv-meta-grid">
+          <div><div class="inv-meta-hdr">Bill to</div><div class="inv-meta-val">Smith Co.<br>123 Main Street<br>Scranton, PA 92129</div></div>
+          <div><div class="inv-meta-hdr">Ship to</div><div class="inv-meta-val">jsmith@smithco.com<br>7535 Torrey Santa Fe Rd</div></div>
+          <div><div class="inv-meta-hdr">Invoice details</div><div class="inv-meta-val">No: 1234 · Net 30<br>Date: 01/01/2026<br>Due: 02/01/2026</div></div>
+          <div><div class="inv-meta-hdr">Custom fields</div><div class="inv-meta-val">PO: 12345<br>Sales rep: Katie Jones</div></div>
+        </div>
+        <table class="inv-table">
+          <tr><th>#</th><th>Date</th><th>Product or Service</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>
+          <tr><td>1.</td><td>12/12/23</td><td><strong>Individual product 1</strong></td><td>1</td><td>$100.00</td><td>$100.00</td></tr>
+          <tr><td>2.</td><td>12/12/23</td><td><strong>Bundle set 1</strong></td><td>1</td><td>$200.00</td><td>$200.00</td></tr>
+          <tr><td>3.</td><td>12/12/23</td><td><strong>Individual product 2</strong></td><td>1</td><td>$200.00</td><td>$200.00</td></tr>
+        </table>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:8px">
+          <div>
+            <div style="font-size:10px;font-weight:700;margin-bottom:4px">Ways to pay</div>
+            <div style="display:flex;gap:3px">
+              <span style="font-size:8px;background:#f4f5f8;border:1px solid #d4d7de;border-radius:2px;padding:1px 4px;font-weight:700">VISA</span>
+              <span style="font-size:8px;background:#f4f5f8;border:1px solid #d4d7de;border-radius:2px;padding:1px 4px;font-weight:700">MC</span>
+              <span style="font-size:8px;background:#f4f5f8;border:1px solid #d4d7de;border-radius:2px;padding:1px 4px;font-weight:700">BANK</span>
+            </div>
+            <button style="background:#0077c5;color:#fff;border:none;border-radius:4px;padding:5px 12px;font-size:10px;cursor:pointer;margin-top:6px">View and pay</button>
+          </div>
+          <div style="text-align:right;font-size:10px">
+            <div style="display:flex;justify-content:space-between;gap:20px"><span>Subtotal</span><span>$500.00</span></div>
+            <div style="display:flex;justify-content:space-between;gap:20px"><span>Sales tax</span><span>$40.00</span></div>
+            <div style="display:flex;justify-content:space-between;gap:20px;font-weight:700;border-top:1px solid #d4d7de;padding-top:4px;margin-top:4px"><span>Total</span><span>$540.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ids-modal-footer">
+      <button class="ids-btn ids-btn-tertiary" onclick="closeModal()">Cancel</button>
+      <button class="ids-btn ids-btn-primary" onclick="applyTemplate()">Apply template</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP SHELL ═══ -->
+<div id="scale-root"><div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="ids-topbar">
+    <div class="ids-topbar-left">
+      <button class="ids-icon-btn" onclick="goBack()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="ids-topbar-title">Invoice 1001</span>
+      <span class="ids-badge">Draft</span>
+    </div>
+    <div class="ids-topbar-right">
+      <!-- Undo/redo -->
+      <div id="undoRedo" style="display:flex;align-items:center;gap:2px;margin-right:8px;padding-right:12px;border-right:1px solid var(--color-divider-tertiary)">
+        <button class="ids-icon-btn" title="Undo">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 6H9.5C11.433 6 13 7.567 13 9.5S11.433 13 9.5 13H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 3L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M1 6L3 3.5L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="ids-icon-btn" title="Redo">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 6H6.5C4.567 6 3 7.567 3 9.5S4.567 13 6.5 13H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13 3L13 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 6L13 3.5L15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <!-- Preview (hidden on design screens) -->
+      <span id="topbarPreview">
+        <button class="ids-btn ids-btn-tertiary">Preview</button>
+      </span>
+      <!-- Save and close split button -->
+      <div class="ids-btn-split" id="saveCloseBtn">
+        <button class="main-part">Save and close</button>
+        <button class="caret-part">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 4L5 7L8 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <!-- Review and send primary button -->
+      <button class="ids-btn ids-btn-primary">Review and send</button>
+      <!-- Intuit Intelligence icon button -->
+      <button class="ids-ai-btn" id="aiIconBtn" onclick="openAI()" title="Intuit Intelligence">
+        <img src="omni-access-point.png" alt="Intuit Intelligence" width="36" height="36">
+      </button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="shell-body">
+
+    <!-- LEFT NAV RAIL -->
+    <nav class="ids-nav-rail">
+      <div class="ids-nav-item active" id="railEdit" onclick="switchRail('edit')" title="Edit">
+        <div class="ids-nav-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(2.21 2.23)"><path d="M18.7022 2.29602L17.2902 0.880019C17.0126 0.600384 16.6823 0.378613 16.3184 0.227556C15.9545 0.0764991 15.5642 -0.000840206 15.1702 0V0C14.7771 -0.00138285 14.3875 0.0750332 14.024 0.224864C13.6605 0.374694 13.3302 0.594977 13.0522 0.873019L1.71722 12.169C1.63642 12.2536 1.5711 12.3518 1.52422 12.459C1.51143 12.4867 1.50009 12.5151 1.49022 12.544C1.48022 12.573 1.46422 12.599 1.45622 12.629L0.0302248 18.289C-0.00689 18.4365 -0.00986 18.5906 0.0215 18.7394C0.0529 18.8883 0.117864 19.028 0.211399 19.1479C0.304935 19.2679 0.424605 19.3649 0.561299 19.4317C0.697994 19.4984 0.848111 19.5331 1.00022 19.533C1.08141 19.5327 1.16229 19.523 1.24122 19.504L6.90022 18.098C6.93322 18.09 6.96223 18.072 6.99423 18.061C7.02623 18.05 7.04823 18.041 7.07423 18.029C7.18023 17.9824 7.27734 17.9178 7.36123 17.838L18.6922 6.538C19.256 5.97676 19.5737 5.21458 19.5756 4.41909C19.5775 3.6236 19.2633 2.85993 18.7022 2.29602ZM2.96122 14.835L4.62323 16.502L4.70423 16.582L2.37622 17.16L2.96122 14.835ZM6.66123 15.713L5.24923 14.297L3.83722 12.88L12.3372 4.40802L13.7492 5.82402L15.1612 7.24002L6.66123 15.713ZM17.2842 5.12202L16.5752 5.82802L15.1632 4.41202L13.7512 2.99502L14.4592 2.28902C14.6471 2.10318 14.9009 1.99928 15.1652 2.00002C15.2964 1.99933 15.4264 2.0248 15.5476 2.07494C15.6688 2.12507 15.7789 2.19887 15.8712 2.29202L17.2902 3.70802C17.4769 3.89634 17.5811 4.1511 17.58 4.41626C17.5789 4.68143 17.4725 4.93529 17.2842 5.12202Z" fill="currentColor"/></g></svg>
+        </div>
+        <span class="ids-nav-label">Edit</span>
+      </div>
+      <div class="ids-nav-item" id="railSettings" onclick="switchRail('settings')" title="Settings">
+        <div class="ids-nav-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.65-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.13-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65A.488.488 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.08.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98L2.46 14.63c-.19.15-.24.42-.12.64l2 3.46c.13.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" fill="currentColor"/></svg>
+        </div>
+        <span class="ids-nav-label">Settings</span>
+      </div>
+      <div class="ids-nav-item" id="railDesign" onclick="switchRail('design')" title="Design">
+        <div class="ids-nav-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2.5h4a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-17a1 1 0 0 1 1-1zm.5 1.5v1.5h2V4H5zm0 3v1.5h3V7H5zm0 3v1.5h2V10H5zm0 3v1.5h3V13H5zm0 3v1.5h2V16H5zm0 3v1.5h3V19H5z" fill="currentColor"/><path d="M14.5 2.5a.75.75 0 0 0-.62.33l-1.75 2.62a.75.75 0 0 0-.13.42v14.63a2.5 2.5 0 1 0 5 0V5.87a.75.75 0 0 0-.13-.42L15.12 2.83a.75.75 0 0 0-.62-.33zm-.99 5h1.98v1.5h-1.98V7.5zm0 3h1.98v9.5a.99.99 0 1 1-1.98 0V10.5z" fill="currentColor"/></svg>
+        </div>
+        <span class="ids-nav-label">Design</span>
+      </div>
+    </nav>
+
+    <!-- SIDE PANEL -->
+    <div class="ids-panel" id="sidePanel">
+
+      <!-- Settings -->
+      <div id="panelSettings" style="display:none;flex-direction:column;flex:1">
+        <div class="ids-panel-header">
+          Settings
+          <button class="ids-panel-close" onclick="closePanel()" title="Close panel">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="ids-panel-divider"></div>
+        <div class="ids-accordion">
+          <button class="ids-accordion-header open" onclick="toggleAccordion(this)">
+            Payment methods <span class="ids-accordion-chevron">⌄</span>
+          </button>
+          <div class="ids-accordion-body">
+            <div class="ids-toggle-row">
+              <div><div class="ids-toggle-label">Cards</div><div class="ids-toggle-sub">2.99% per transaction</div></div>
+              <label class="ids-switch">
+                <input type="checkbox" checked>
+                <div class="ids-switch-track"></div>
+                <div class="ids-switch-thumb"></div>
+              </label>
+            </div>
+            <div class="ids-toggle-row">
+              <div><div class="ids-toggle-label">Bank transfer</div><div class="ids-toggle-sub">1% per transaction</div></div>
+              <label class="ids-switch">
+                <input type="checkbox" checked>
+                <div class="ids-switch-track"></div>
+                <div class="ids-switch-thumb"></div>
+              </label>
+            </div>
+            <div class="ids-toggle-row">
+              <div><div class="ids-toggle-label">PayPal and Venmo</div><div class="ids-toggle-sub">2.99% per transaction</div></div>
+              <label class="ids-switch">
+                <input type="checkbox" checked>
+                <div class="ids-switch-track"></div>
+                <div class="ids-switch-thumb"></div>
+              </label>
+            </div>
+            <div class="ids-toggle-row">
+              <div><div class="ids-toggle-label">Buy now, pay later</div><div class="ids-toggle-sub">2.99% per transaction</div></div>
+              <label class="ids-switch">
+                <input type="checkbox" checked>
+                <div class="ids-switch-track"></div>
+                <div class="ids-switch-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="ids-accordion">
+          <button class="ids-accordion-header" onclick="toggleAccordion(this)">
+            Payment settings <span class="ids-accordion-chevron">⌄</span>
+          </button>
+          <div class="ids-accordion-body">
+            <p style="font-size:12px;color:var(--color-text-secondary)">Configure automatic reminders, late fees, and deposit settings.</p>
+          </div>
+        </div>
+        <div class="ids-accordion">
+          <button class="ids-accordion-header" onclick="toggleAccordion(this)">
+            Scheduling <span class="ids-accordion-chevron">⌄</span>
+          </button>
+          <div class="ids-accordion-body">
+            <p style="font-size:12px;color:var(--color-text-secondary)">Set up recurring invoices and scheduling options.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Template Selection -->
+      <div id="panelTemplate" style="display:none;flex-direction:column;flex:1">
+        <div class="ids-panel-header">
+          <span style="display:flex;align-items:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Templates
+          </span>
+          <button class="ids-link ids-link-sm">Manage all</button>
+        </div>
+        <div style="padding:12px;overflow-y:auto;flex:1">
+          <div class="ids-upload-box">
+            <div class="ids-upload-title">Have an invoice you like?</div>
+            <div><button class="ids-link ids-link-sm">Select a file</button> or drag and drop here</div>
+          </div>
+          <div class="ids-tmpl-tabs">
+            <button class="ids-tmpl-tab active">Product</button>
+            <button class="ids-tmpl-tab">Custom</button>
+          </div>
+          <!-- Modern -->
+          <div class="ids-tmpl-card selected" id="tmplModern">
+            <div class="ids-tmpl-thumb" onclick="openModal()" style="cursor:pointer">
+              <div style="width:100%;height:100%;padding:12px;display:flex;flex-direction:column;gap:3px;background:#f9f9f9">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:9px;font-weight:700;letter-spacing:1px;color:#1a1a1a">INVOICE</span>
+                  <div style="width:36px;height:14px;background:#1a1a1a;border-radius:2px;display:flex;align-items:center;justify-content:center;color:#f5a623;font-size:6px;font-weight:700">▲CME</div>
+                </div>
+                <div style="font-size:7px;color:#6b6c72;margin-bottom:4px">Acme Construction LLC · 123 E. Meadow Way</div>
+                <div style="font-size:8px;font-weight:700;margin-bottom:3px">John Smith</div>
+                <div style="width:100%;height:1px;background:#e8eaed;margin:3px 0"></div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:4px">
+                  <div style="font-size:6px;color:#555"><strong>Bill to</strong><br>Smith Co.</div>
+                  <div style="font-size:6px;color:#555"><strong>Ship to</strong><br>jsmith@co.com</div>
+                  <div style="font-size:6px;color:#555"><strong>Invoice</strong><br>No: 1234</div>
+                  <div style="font-size:6px;color:#555"><strong>Custom</strong><br>PO: 12345</div>
+                </div>
+                <div style="width:100%;height:1px;background:#e8eaed;margin:2px 0"></div>
+                <div style="font-size:6px;color:#555">Product 1 .......... $100.00</div>
+                <div style="font-size:6px;color:#555">Bundle set 1 ....... $200.00</div>
+                <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end">
+                  <div style="display:flex;gap:2px">
+                    <span style="font-size:5px;background:#f4f5f8;border:1px solid #d4d7de;padding:1px 3px;border-radius:1px;font-weight:700">VISA</span>
+                    <span style="font-size:5px;background:#f4f5f8;border:1px solid #d4d7de;padding:1px 3px;border-radius:1px;font-weight:700">BANK</span>
+                  </div>
+                  <div style="font-size:7px;font-weight:700">Total: $540.00</div>
+                </div>
+              </div>
+            </div>
+            <div class="ids-tmpl-footer">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="ids-tmpl-name">Modern</span>
+                <span class="ids-default-badge">Default</span>
+              </div>
+              <div class="ids-tmpl-actions">
+                <button class="ids-btn ids-btn-sm ids-btn-secondary" onclick="openModal()">Preview</button>
+                <button class="ids-btn ids-btn-sm ids-btn-primary" onclick="applyTemplate()">Use</button>
+              </div>
+            </div>
+          </div>
+          <!-- Progress billing -->
+          <div class="ids-tmpl-card">
+            <div class="ids-tmpl-thumb" style="background:#f0f4ff">
+              <div style="width:100%;height:100%;padding:12px;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:8px;font-weight:700;color:#1a3a6e">PROGRESS INVOICE</span>
+                  <div style="width:32px;height:12px;background:#1a3a6e;border-radius:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:5px;font-weight:700">▲CME</div>
+                </div>
+                <div style="background:#dce8ff;border-radius:2px;padding:3px 6px;font-size:6px;color:#1a3a6e;font-weight:600">Progress Billing — Phase 2 of 4</div>
+                <div style="width:100%;height:4px;background:#d4d7de;border-radius:2px;overflow:hidden"><div style="width:50%;height:100%;background:#1a3a6e;border-radius:2px"></div></div>
+                <div style="font-size:6px;color:#555">✓ Phase 1 $500.00</div>
+                <div style="font-size:6px;color:#1a3a6e;font-weight:700">→ Phase 2 $500.00</div>
+                <div style="font-size:6px;color:#aaa">○ Phase 3 $500.00</div>
+                <div style="font-size:6px;color:#aaa">○ Phase 4 $500.00</div>
+              </div>
+            </div>
+            <div class="ids-tmpl-footer">
+              <span class="ids-tmpl-name">Progress billing</span>
+              <div class="ids-tmpl-actions">
+                <button class="ids-btn ids-btn-sm ids-btn-secondary">Preview</button>
+                <button class="ids-btn ids-btn-sm ids-btn-primary" onclick="applyTemplate()">Use</button>
+              </div>
+            </div>
+          </div>
+          <!-- AI style -->
+          <div class="ids-tmpl-card">
+            <div class="ids-tmpl-thumb" style="background:#fdf8ff">
+              <div style="width:100%;height:100%;padding:12px;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">
+                  <div style="width:14px;height:14px;background:linear-gradient(135deg,#a78bfa,#2d6ff4);border-radius:50%;display:flex;align-items:center;justify-content:center">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="white"><path d="M4 1L4.9 3.1H7L5.3 4.3L6 6.5L4 5.2L2 6.5L2.7 4.3L1 3.1H3.1L4 1Z"/></svg>
+                  </div>
+                  <span style="font-size:8px;font-weight:700;color:#5b21b6">AI Generated</span>
+                </div>
+                <div style="font-size:7px;color:#555;line-height:1.5">I generated this based on your style preferences and past invoices.</div>
+                <div style="width:100%;height:1px;background:#e8eaed;margin:4px 0"></div>
+                <div style="font-size:6px;color:#6b6c72">✓ Matched your brand colors</div>
+                <div style="font-size:6px;color:#6b6c72">✓ Added your logo</div>
+                <div style="font-size:6px;color:#6b6c72">✓ Formatted for construction</div>
+              </div>
+            </div>
+            <div class="ids-tmpl-footer">
+              <span class="ids-tmpl-name">AI style billing</span>
+              <div class="ids-tmpl-actions">
+                <button class="ids-btn ids-btn-sm ids-btn-secondary" onclick="openAI();showDesignPanel();switchToDesignView()">AI customize</button>
+                <button class="ids-btn ids-btn-sm ids-btn-primary" onclick="applyTemplate()">Use</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design Panel -->
+      <div id="panelDesign" style="display:none;flex-direction:column;flex:1">
+        <div class="ids-panel-header">
+          Design
+          <button class="ids-icon-btn" style="width:24px;height:24px;font-size:16px;color:var(--color-text-secondary)">≡</button>
+        </div>
+        <div class="ids-panel-tabs">
+          <button class="ids-panel-tab active" id="tabStyles" onclick="switchDesignTab('styles')">Styles</button>
+          <button class="ids-panel-tab" id="tabContent" onclick="switchDesignTab('content')">Content</button>
+        </div>
+        <div id="designStylesPane" style="overflow-y:auto;flex:1">
+          <div class="ids-design-section">
+            <button class="ids-design-section-hdr" onclick="">Header <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button>
+          </div>
+          <div class="ids-design-section">
+            <button class="ids-design-section-hdr" onclick="">Details <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button>
+          </div>
+          <div class="ids-design-section">
+            <button class="ids-design-section-hdr" onclick="">Product and service <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button>
+          </div>
+          <div class="ids-design-section">
+            <button class="ids-design-section-hdr" onclick="">Totals <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button>
+          </div>
+          <div class="ids-design-section">
+            <button class="ids-design-section-hdr" onclick="">Footer <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button>
+          </div>
+          <div class="ids-add-element">
+            <span style="font-size:18px;font-weight:300;color:var(--color-text-secondary)">+</span> Add element
+          </div>
+        </div>
+        <div id="designContentPane" style="display:none;overflow-y:auto;flex:1">
+          <div class="ids-design-section"><button class="ids-design-section-hdr">Company info <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button></div>
+          <div class="ids-design-section"><button class="ids-design-section-hdr">Customer info <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button></div>
+          <div class="ids-design-section"><button class="ids-design-section-hdr">Line items <span style="color:var(--color-text-secondary);font-size:15px">⌄</span></button></div>
+        </div>
+      </div>
+
+    </div><!-- /side panel -->
+
+    <!-- MAIN -->
+    <div class="shell-main">
+
+      <!-- ── SCREEN 1: Invoice Edit ── -->
+      <div class="screen active" id="screenInvoice" style="overflow-y:auto">
+        <div style="padding:24px 32px;background:var(--color-container-background-primary)">
+
+          <!-- Payment bar -->
+          <div class="payment-bar">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div class="ids-segmented">
+                <button class="ids-segmented-item active">Request online</button>
+                <button class="ids-segmented-item">Charge</button>
+                <button class="ids-segmented-item">Record</button>
+              </div>
+              <span class="invoice-total-disp">Invoice total: <strong id="invTotalDisp">$0.00</strong></span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);line-height:1.5">Payment methods</span>
+                <button class="ids-link ids-link-sm" onclick="switchRail('settings')">Edit</button>
+              </div>
+              <div class="pm-row">
+                <img src="payment-logo-applepay.png" alt="Apple Pay" class="pm-logo">
+                <img src="payment-logo-visa.png" alt="Visa" class="pm-logo">
+                <img src="payment-logo-discover.png" alt="Discover" class="pm-logo">
+                <img src="payment-logo-amex.png" alt="American Express" class="pm-logo">
+                <img src="payment-logo-mastercard.png" alt="Mastercard" class="pm-logo">
+                <img src="payment-logo-bank.png" alt="Bank" class="pm-logo">
+                <img src="payment-logo-paypal.png" alt="PayPal" class="pm-logo">
+                <img src="payment-logo-venmo.png" alt="Venmo" class="pm-logo">
+                <img src="payment-logo-affirm.png" alt="Affirm" class="pm-logo">
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer -->
+          <div class="form-section-title" style="display:flex;align-items:center;gap:8px">Customer <button class="ids-link ids-link-sm" id="customerEditLink" style="display:none">Edit</button></div>
+          <!-- EMPTY: just Name dropdown -->
+          <div class="form-grid form-grid-4" id="customerEmpty">
+            <div class="ids-field"><label class="ids-field-label">Name</label><select class="ids-field-input ids-field-select" id="customerSelect" onchange="onCustomerSelect(this.value)"><option value="">&nbsp;</option><option value="michael">Michael Scott</option><option value="dwight">Dwight Schrute</option><option value="jim">Jim Halpert</option></select></div>
+          </div>
+          <!-- FILLED: Name, Email, Billing address -->
+          <div class="form-grid form-grid-4" id="customerFilled" style="display:none">
+            <div class="ids-field"><label class="ids-field-label">Name</label><input class="ids-field-input with-chevron" type="text" value="Michael Scott"></div>
+            <div class="ids-field"><label class="ids-field-label" style="display:flex;justify-content:space-between">Email <button class="ids-link ids-link-sm">cc/bcc</button></label><input class="ids-field-input" type="email" value="michaelscott@gmail.com"></div>
+            <div class="ids-field"><label class="ids-field-label">Billing address</label><input class="ids-field-input" type="text" value="7535 Torrey Santa Fe Rd, Scranton, PA 92129"></div>
+          </div>
+
+          <!-- Invoice details -->
+          <div class="form-section-title">Invoice details</div>
+          <div class="form-grid form-grid-4">
+            <div class="ids-field"><label class="ids-field-label">Invoice no.</label><input class="ids-field-input" type="text" value="1001"></div>
+            <div class="ids-field"><label class="ids-field-label">Invoice date</label><input class="ids-field-input with-calendar" type="text" value="03/01/2026"></div>
+            <div class="ids-field"><label class="ids-field-label">Due date</label><input class="ids-field-input with-chevron" type="text" value="04/01/2026  (Net 30)"></div>
+            <div class="ids-field"><label class="ids-field-label">Frequency</label><input class="ids-field-input with-chevron" type="text" value="One-time"></div>
+          </div>
+
+          <!-- Products -->
+          <div class="form-section-title">Products and services</div>
+          <table class="ids-table">
+            <colgroup>
+              <col style="width:40px">
+              <col style="width:13%">
+              <col style="width:20%">
+              <col style="width:32%">
+              <col style="width:8%">
+              <col style="width:13%">
+              <col style="width:14%">
+              <col style="width:40px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Date <span class="th-sort">↕</span></th>
+                <th>Product/service <span class="th-sort">↕</span></th>
+                <th>Description</th>
+                <th style="text-align:right">Qty</th>
+                <th style="text-align:right">Rate</th>
+                <th style="text-align:right">Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <!-- EMPTY: one blank row -->
+            <tbody id="tableEmpty">
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text"></td>
+                <td><input class="ids-table-input" type="text"></td>
+                <td><input class="ids-table-input" type="text"></td>
+                <td><input class="ids-table-input ta-right" type="text"></td>
+                <td><input class="ids-table-input ta-right" type="text"></td>
+                <td><input class="ids-table-input ta-right" type="text"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+            </tbody>
+            <!-- FILLED: line items -->
+            <tbody id="tableFilled" style="display:none">
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text" value="4/1/26"></td>
+                <td><input class="ids-table-input" type="text" value="2-inch cables"></td>
+                <td><input class="ids-table-input" type="text" value="10ft copper power cables cut and installed…"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="5"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$2,500.00"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text" value="4/1/26"></td>
+                <td><input class="ids-table-input" type="text" value="Junction boxes"></td>
+                <td><input class="ids-table-input" type="text" value="Steel junction boxes installed and wired to c…"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="3"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$1,500.00"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text" value="4/1/26"></td>
+                <td><input class="ids-table-input" type="text" value="Switch boards"></td>
+                <td><input class="ids-table-input" type="text" value="Commercial switchboards installed and con…"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="2"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$1,000.00"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text" value="4/1/26"></td>
+                <td><input class="ids-table-input" type="text" value="Grounding rods"></td>
+                <td><input class="ids-table-input" type="text" value="Copper grounding rods installed and bond…"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="4"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$2,000.00"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+              <tr>
+                <td style="text-align:center"><span class="drag-handle">⠿</span></td>
+                <td><input class="ids-table-input" type="text" value="4/1/26"></td>
+                <td><input class="ids-table-input" type="text" value="Service fee"></td>
+                <td><input class="ids-table-input" type="text" value="Labor, setup, testing, and final inspection"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="1"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td><input class="ids-table-input ta-right" type="text" value="$500.00"></td>
+                <td style="text-align:center"><button class="kebab-btn">⋮</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-bottom:20px">
+            <div class="ids-btn-split ids-btn-split-secondary">
+              <button class="main-part">Add new</button>
+              <button class="caret-part"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 4L5 7L8 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="display:flex;justify-content:space-between;margin-top:24px">
+            <div style="flex:1;min-width:0;max-width:543px;display:flex;flex-direction:column;gap:24px">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:16px;font-weight:600;line-height:1.5;color:var(--color-text-primary)">Note to customer</p>
+                <textarea class="ids-textarea" style="min-height:72px"></textarea>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:16px;font-weight:600;line-height:1.5;color:var(--color-text-primary)">Attachments</p>
+                <div class="attach-box" style="border:1px dashed var(--color-input-border-primary);border-radius:8px;padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <button class="ids-link" style="font-size:16px">Add attachment</button>
+                  <div style="font-size:14px;color:var(--color-text-secondary)">Max size: 20 MB</div>
+                </div>
+              </div>
+            </div>
+            <div style="width:280px;flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding-top:4px">
+              <div class="totals-row"><span>Subtotal</span><span id="totSubtotal">$0.00</span></div>
+              <div class="totals-row"><span>Sales tax</span><span id="totTax">$0.00</span></div>
+              <div style="height:1px;background:var(--color-border-primary)"></div>
+              <div class="totals-row grand-total" style="border-top:none;margin-top:0;padding-top:0"><span>Total</span><span id="totTotal">$0.00</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SCREEN 2: Design / PDF View ── -->
+      <div class="screen" id="screenDesign">
+        <div class="ids-design-toolbar visible">
+          <div class="ids-tmpl-info">
+            <span style="color:var(--color-text-secondary);font-size:14px">Template:</span>
+            <span style="font-weight:500;font-size:14px">Modern</span>
+            <button class="ids-link" onclick="switchRail('design');showTemplatePanel()">Change template ▾</button>
+          </div>
+          <div class="ids-view-tabs">
+            <button class="ids-view-tab active">PDF</button>
+            <button class="ids-view-tab">Email</button>
+            <button class="ids-view-tab">SMS</button>
+            <button class="ids-view-tab">Payor</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <button class="ids-icon-btn" title="Undo">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 5H8C9.657 5 11 6.343 11 8s-1.343 3-3 3H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2.5 2.5V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M1 5L2.5 3L4 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ids-icon-btn" title="Redo">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.5 5H6C4.343 5 3 6.343 3 8s1.343 3 3 3h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11.5 2.5V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M10 5L11.5 3L13 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ids-icon-btn" title="History" style="font-size:14px;color:var(--color-text-secondary)">🕐</button>
+          </div>
+        </div>
+
+        <div style="flex:1;display:flex;overflow:hidden">
+          <!-- PDF Canvas -->
+          <div class="ids-pdf-canvas" id="pdfCanvasArea">
+            <!-- Floating edit toolbar -->
+            <div class="edit-toolbar-float" id="editToolbarFloat">
+              <div class="edit-toolbar-inner">
+                <span class="edit-tb-btn" style="cursor:grab">⠿</span>
+                <div style="width:16px;height:16px;background:linear-gradient(135deg,#a78bfa,#2d6ff4);border-radius:50%;display:flex;align-items:center;justify-content:center">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="white"><path d="M4 1L4.9 3.1H7L5.3 4.3L6 6.5L4 5.2L2 6.5L2.7 4.3L1 3.1H3.1L4 1Z"/></svg>
+                </div>
+                <div class="edit-tb-sep"></div>
+                <select class="edit-h1-select"><option>H1</option><option>H2</option><option>Body</option></select>
+                <button class="edit-tb-btn" style="font-weight:700">B</button>
+                <button class="edit-tb-btn" style="font-style:italic">I</button>
+                <button class="edit-tb-btn" style="text-decoration:underline">U</button>
+                <button class="edit-tb-btn">S̶</button>
+                <div class="edit-tb-sep"></div>
+                <button class="edit-tb-btn">≡</button>
+                <button class="edit-tb-btn">⌘</button>
+                <button class="edit-tb-btn">🔗</button>
+                <button class="edit-tb-btn" style="color:#e55">🗑</button>
+              </div>
+            </div>
+
+            <!-- PDF Document -->
+            <div class="ids-pdf-doc">
+              <div class="ids-pdf-header">
+                <div>
+                  <div class="ids-pdf-title">INVOICE</div>
+                  <div class="ids-pdf-company">
+                    <strong>Acme Construction LLC</strong><br>
+                    123 E. Meadow Way<br>
+                    Palo Alto CA, 94306<br>
+                    info@acmellc.com · 206-123-12345 · acmellc.com
+                  </div>
+                </div>
+                <div class="ids-pdf-logo">▲ CME</div>
+              </div>
+              <div class="ids-pdf-customer-name">John Smith</div>
+              <div class="ids-pdf-meta-grid">
+                <div><div class="ids-pdf-meta-hdr">Bill to</div><div class="ids-pdf-meta-val">Smith Co.<br>123 Main Street<br>Scranton, PA 92129</div></div>
+                <div><div class="ids-pdf-meta-hdr">Ship to</div><div class="ids-pdf-meta-val">jsmith@smithco.com<br>7535 Torrey Santa Fe Rd<br>Scranton, PA 92129</div></div>
+                <div><div class="ids-pdf-meta-hdr">Invoice details</div><div class="ids-pdf-meta-val">Invoice no: 1234<br>Date: 01/01/2026<br>Terms: Net 30<br>Due date: 02/01/2026</div></div>
+                <div><div class="ids-pdf-meta-hdr">Custom fields</div><div class="ids-pdf-meta-val">PO number: 12345<br>Sales rep: Katie Jones<br>Department code: V39401</div></div>
+              </div>
+              <table class="ids-pdf-table">
+                <thead>
+                  <tr>
+                    <th>#</th><th>Date</th>
+                    <th id="colProductService" onclick="selectPdfCell(this)" style="cursor:pointer">Product or Service</th>
+                    <th>SKU</th><th>Qty</th><th>Rate</th><th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1.</td><td>12/12/2023</td><td><strong>Individual product 1</strong><br><span style="color:var(--color-text-secondary)">Description of the product service added with long text</span></td><td>12345678900</td><td>1</td><td class="num">$100.00</td><td class="num">$100.00</td></tr>
+                  <tr><td>2.</td><td>12/12/2023</td><td><strong>Bundle set 1</strong><br><span style="color:var(--color-text-secondary)">Description of the items within a bundle set</span></td><td>12345678900</td><td>1</td><td class="num">$200.00</td><td class="num">$200.00</td></tr>
+                  <tr class="sub-row"><td></td><td>12/12/2023</td><td>Bundled item 1<br><span style="font-size:10px">Description of bundled item</span></td><td>12345678900</td><td>1</td><td class="num">$100.00</td><td class="num">$100.00</td></tr>
+                  <tr class="sub-row"><td></td><td>12/12/2023</td><td>Bundled item 2<br><span style="font-size:10px">Description of bundled item</span></td><td>12345678900</td><td>1</td><td class="num">$100.00</td><td class="num">$100.00</td></tr>
+                  <tr><td>3.</td><td>12/12/2023</td><td><strong>Individual product 2</strong><br><span style="color:var(--color-text-secondary)">Description of product service with long text content</span></td><td>12345678900</td><td>1</td><td class="num">$200.00</td><td class="num">$200.00</td></tr>
+                </tbody>
+              </table>
+              <div class="ids-pdf-footer-row">
+                <div>
+                  <div class="ids-pdf-pay-label">Ways to pay</div>
+                  <div class="ids-pdf-pay-row">
+                    <span class="ids-pdf-pay-chip">ApplePay</span>
+                    <span class="ids-pdf-pay-chip">VISA</span>
+                    <span class="ids-pdf-pay-chip">DISC</span>
+                    <span class="ids-pdf-pay-chip">AMEX</span>
+                    <span class="ids-pdf-pay-chip">MC</span>
+                    <span class="ids-pdf-pay-chip">BANK</span>
+                  </div>
+                  <div class="ids-pdf-note">Hi Alex, Here's your invoice! Let us know if you have any questions.</div>
+                </div>
+                <div class="ids-pdf-totals">
+                  <div class="ids-pdf-totals-row"><span>Subtotal</span><span>$700.00</span></div>
+                  <div class="ids-pdf-totals-row"><span>Sales tax (8%)</span><span>$56.00</span></div>
+                  <div class="ids-pdf-totals-row ids-pdf-total-final"><span>Total</span><span>$756.00</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Zoom chip -->
+            <div class="ids-zoom-chip">
+              <div class="ids-zoom-track"><div class="ids-zoom-thumb"></div></div>
+              <div class="ids-zoom-label">135%</div>
+            </div>
+          </div>
+
+          <!-- AI Panel -->
+          <div class="ids-ai-panel" id="aiPanel">
+            <div class="ids-ai-panel-header">
+              <div class="ids-ai-panel-title">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 6H14L10.5 8.5L12 12.5L8 10L4 12.5L5.5 8.5L2 6H6.5L8 2Z" fill="url(#g1)"/><defs><linearGradient id="g1" x1="2" y1="2" x2="14" y2="14"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#2d6ff4"/></linearGradient></defs></svg>
+                Intuit Intelligence
+                <span class="ids-ai-beta">Beta</span>
+              </div>
+              <div class="ids-ai-subtitle">Customizing · Modern template</div>
+            </div>
+            <div class="ids-ai-messages">
+              <div class="ids-ai-msg">
+                <div class="ids-ai-msg-bubble">
+                  I've generated an invoice template directly in the preview based on what you uploaded and saved it as a new Custom template. Let me know how you want to customize further.
+                  <div class="ids-ai-action-row">
+                    <button class="ids-ai-action-btn" onclick="selectPdfCell(document.getElementById('colProductService')); closeAI()">Edit details of the template</button>
+                    <button class="ids-ai-action-btn">Generate a similar template ✦</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ids-ai-input-area">
+              <div class="ids-ai-input-row">
+                <input class="ids-ai-input" type="text" placeholder="What can I add for you?">
+                <button class="ids-ai-send">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="white"><path d="M1 11L11 6L1 1V5L8 6L1 7V11Z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /shell-main -->
+  </div><!-- /shell-body -->
+</div><!-- /shell --></div><!-- /scale-root -->
+
+<!-- ══ DESIGN TAB — full reference editor embedded ══ -->
+<iframe id="designFrame" title="Design"
+  style="position:fixed;inset:0;width:100vw;height:100vh;border:none;display:none;z-index:50;background:#fff"></iframe>
+
+<script>
+let currentRail = 'edit';
+
+function onCustomerSelect(val) {
+  const filled = !!val;
+  document.getElementById('customerEmpty').style.display = filled ? 'none' : '';
+  document.getElementById('customerFilled').style.display = filled ? '' : 'none';
+  document.getElementById('customerEditLink').style.display = filled ? '' : 'none';
+  document.getElementById('tableEmpty').style.display = filled ? 'none' : '';
+  document.getElementById('tableFilled').style.display = filled ? '' : 'none';
+  const sub = filled ? '$7,500.00' : '$0.00';
+  const tax = filled ? '$0.00' : '$0.00';
+  const tot = filled ? '$7,500.00' : '$0.00';
+  document.getElementById('totSubtotal').textContent = sub;
+  document.getElementById('totTax').textContent = tax;
+  document.getElementById('totTotal').textContent = tot;
+  document.getElementById('invTotalDisp').textContent = tot;
+}
+
+function switchRail(rail) {
+  currentRail = rail;
+  ['railEdit','railSettings','railDesign'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['panelSettings','panelTemplate','panelDesign'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+
+  if (rail !== 'design') closeDesignFrame();
+  if (rail === 'edit') {
+    document.getElementById('railEdit').classList.add('active');
+    document.getElementById('sidePanel').classList.remove('open');
+    showScreen('screenInvoice');
+    document.getElementById('undoRedo').style.display = 'flex';
+    document.getElementById('topbarPreview').style.display = '';
+  } else if (rail === 'settings') {
+    document.getElementById('railSettings').classList.add('active');
+    document.getElementById('panelSettings').style.display = 'flex';
+    document.getElementById('sidePanel').classList.add('open');
+    showScreen('screenInvoice');
+    document.getElementById('undoRedo').style.display = 'flex';
+    document.getElementById('topbarPreview').style.display = '';
+  } else if (rail === 'design') {
+    document.getElementById('railDesign').classList.add('active');
+    showDesignPanel();
+    switchToDesignView();
+  }
+}
+
+function openDesignFrame() {
+  var f = document.getElementById('designFrame');
+  // Lazy-load the reference editor the first time
+  if (!f.getAttribute('src')) {
+    f.setAttribute('src', 'invoicetemplates-ref/index.html');
+  }
+  f.style.display = 'block';
+}
+function closeDesignFrame() {
+  document.getElementById('designFrame').style.display = 'none';
+}
+// The embedded reference posts this when its Edit nav is clicked → return to our Edit tab
+window.addEventListener('message', function(e) {
+  if (!e.data) return;
+  if (e.data.type === 'mm-switch-to-edit') {
+    closeDesignFrame();
+    switchRail('edit');
+  } else if (e.data.type === 'mm-switch-to-settings') {
+    closeDesignFrame();
+    switchRail('settings');
+  }
+});
+
+function showTemplatePanel() {
+  ['panelSettings','panelTemplate','panelDesign'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  document.getElementById('panelTemplate').style.display = 'flex';
+  document.getElementById('sidePanel').classList.add('open');
+}
+function showDesignPanel() {
+  ['panelSettings','panelTemplate','panelDesign'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  document.getElementById('panelDesign').style.display = 'flex';
+  document.getElementById('sidePanel').classList.add('open');
+}
+function switchToDesignView() {
+  showScreen('screenDesign');
+  document.getElementById('undoRedo').style.display = 'flex';
+  document.getElementById('topbarPreview').style.display = 'none';
+  document.getElementById('railDesign').classList.add('active');
+  ['railEdit','railSettings'].forEach(id => document.getElementById(id).classList.remove('active'));
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+}
+function toggleAccordion(hdr) {
+  hdr.classList.toggle('open');
+}
+function switchDesignTab(tab) {
+  document.getElementById('tabStyles').classList.toggle('active', tab === 'styles');
+  document.getElementById('tabContent').classList.toggle('active', tab === 'content');
+  document.getElementById('designStylesPane').style.display = tab === 'styles' ? '' : 'none';
+  document.getElementById('designContentPane').style.display = tab === 'content' ? '' : 'none';
+}
+function openModal() { document.getElementById('tmplModal').classList.add('open'); }
+function closeModal() { document.getElementById('tmplModal').classList.remove('open'); }
+function applyTemplate() {
+  closeModal();
+  switchRail('design');
+  showDesignPanel();
+  switchToDesignView();
+}
+function openAI() {
+  document.getElementById('aiPanel').classList.add('open');
+  switchToDesignView();
+  showDesignPanel();
+}
+function closeAI() {
+  document.getElementById('aiPanel').classList.remove('open');
+}
+function selectPdfCell(el) {
+  document.querySelectorAll('.cell-selected').forEach(c => c.classList.remove('cell-selected'));
+  el.classList.add('cell-selected');
+  document.getElementById('editToolbarFloat').classList.add('visible');
+  setTimeout(() => { document.addEventListener('click', deselectCell, { once: true }); }, 10);
+}
+function deselectCell(e) {
+  if (!e.target.closest('#editToolbarFloat') && !e.target.closest('.ids-pdf-table')) {
+    document.querySelectorAll('.cell-selected').forEach(c => c.classList.remove('cell-selected'));
+    document.getElementById('editToolbarFloat').classList.remove('visible');
+  }
+}
+function goBack() {
+  if (currentRail !== 'edit') switchRail('edit');
+}
+document.getElementById('tmplModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+<script>
+</script>
+</body>
+</html>
