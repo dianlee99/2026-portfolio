@@ -23,7 +23,7 @@ export function Footer() {
             Résumé
           </a>
         </div>
-        <span className="italic text-ink-soft">Built with vibes and love.</span>
+        <span className="italic text-ink-soft">Built with vibes, code, and love.</span>
       </div>
     </footer>
   );

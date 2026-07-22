@@ -18,7 +18,7 @@ export function DockHome() {
   return (
     <>
       {/* Intro — bold statement + a tight supporting paragraph */}
-      <section className="mx-auto max-w-6xl px-6 pt-24 md:pt-32">
+      <section className="mx-auto max-w-6xl px-6 pt-12 md:pt-16">
         <Greeting className="text-[clamp(2.4rem,6vw,4rem)] font-semibold tracking-tight" />
         <p className="mt-6 max-w-[54rem] text-base font-normal leading-relaxed text-ink-soft [text-wrap:balance] md:text-lg">
           A senior product designer at{" "}
