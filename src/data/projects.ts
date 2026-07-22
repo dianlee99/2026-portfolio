@@ -66,6 +66,7 @@ export const projects: Project[] = [
     role: "Senior Product Designer",
     tags: ["Fintech", "0→1", "Design systems", "AI"],
     accent: "#2ca01c",
+locked: true,
     links: [{ text: "QuickBooks", href: QUICKBOOKS_URL }],
     impact:
       "Customers get lost on invoices and rarely send them. I led a north-star QuickBooks rethink to lift create-to-send.",
@@ -108,6 +109,7 @@ export const projects: Project[] = [
     duration: "Q4 2024 – Q1 2025",
     tags: ["Enterprise", "0→1", "Data governance", "Design systems"],
     accent: "#004977",
+locked: true,
     impact:
       "Sole designer on 70+ screens—built a system of record for ~4,000 data usages and decommissioned a third-party SaaS tool.",
     overview:
