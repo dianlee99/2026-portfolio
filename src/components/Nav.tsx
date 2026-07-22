@@ -7,6 +7,8 @@ export function Nav() {
   const pathname = usePathname();
   // No nav bar on the homepages — the name is the header there.
   if (pathname === "/" || pathname === "/b") return null;
+  // Case pages use their own CaseTopBar (close/Esc) chrome instead.
+  if (pathname.startsWith("/work")) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-paper">

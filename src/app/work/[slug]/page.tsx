@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProject, projects } from "@/data/projects";
-import { NextProject } from "@/components/NextProject";
+import { CaseTopBar } from "@/components/case/CaseTopBar";
 import { PasswordGate } from "@/components/PasswordGate";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { MiniDock } from "@/components/dock/MiniDock";
@@ -34,6 +34,7 @@ function CaseStudy({ slug }: { slug: string }) {
 
   return (
     <article className="pb-28 md:pb-32">
+      <CaseTopBar client={project.client} />
       <ReadingProgress />
       {project.slug === "eureka-surveys" && <EurekaCase project={project} />}
       {project.slug === "archive" && <ArchiveCase project={project} />}
@@ -44,7 +45,6 @@ function CaseStudy({ slug }: { slug: string }) {
         <DataRegistryCase project={project} />
       )}
       {project.slug === "intuit" && <IntuitCase project={project} />}
-      <NextProject current={project} />
       <MiniDock currentSlug={project.slug} />
     </article>
   );

@@ -29,12 +29,26 @@ export function Greeting({ className }: { className?: string }) {
     setGreeting(greetingForHour(new Date().getHours()));
   }, []);
 
+  const speakName = () => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    // "Diane" reads as /daɪˈæn/ — the dy-AN sound — more reliably than "Dian".
+    const utterance = new SpeechSynthesisUtterance("Diane");
+    utterance.rate = 0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <h1 className={`${display.className} ${className ?? ""} leading-[1.05]`}>
       {greeting ? `${greeting}, ` : ""}I&apos;m Dian{" "}
-      <span className="font-normal italic tracking-normal text-ink-soft">
+      <button
+        type="button"
+        onClick={speakName}
+        aria-label="Hear how to pronounce Dian"
+        className="cursor-pointer font-normal italic tracking-normal text-ink-soft underline decoration-dotted underline-offset-4 transition-colors hover:text-ink"
+      >
         (dy-AN)
-      </span>
+      </button>
     </h1>
   );
 }

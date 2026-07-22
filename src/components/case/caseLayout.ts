@@ -1,5 +1,18 @@
-/** Inner content column — pair with a full-width wrapper when using borders. */
-export const caseInnerClass = "mx-auto max-w-[900px] px-6";
+/** Inner content column — wide, bold measure shared across every case. */
+export const caseInnerClass = "mx-auto max-w-6xl px-6";
+
+/** Wider content column for the bold redesign system. */
+export const caseWideClass = "mx-auto max-w-6xl px-6";
+
+/** Extra-wide wrapper for the big hero image. */
+export const caseHeroWideClass = "mx-auto max-w-[96rem] px-6";
+
+/** Full-width band with a top rule; `raised` gives the alternating grey wash. */
+export const caseBandClass = "border-t border-line";
+export const caseBandRaisedClass = "border-t border-line bg-paper-raised";
+
+/** Generous vertical rhythm inside a bold-system band. */
+export const caseBandInnerClass = `${caseWideClass} py-16 md:py-24`;
 
 /** Full-width horizontal rules */
 export const caseSectionRuleClass = "border-t border-line";

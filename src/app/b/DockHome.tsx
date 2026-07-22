@@ -17,10 +17,10 @@ export function DockHome() {
 
   return (
     <>
-      {/* Intro — one bold line + a tight supporting paragraph */}
-      <section className="mx-auto max-w-[900px] px-6 pt-24 md:pt-32">
-        <Greeting className="text-[clamp(2rem,5vw,3rem)] font-semibold tracking-tight" />
-        <p className="mt-5 max-w-reading text-base font-normal leading-relaxed text-ink-soft md:text-lg">
+      {/* Intro — bold statement + a tight supporting paragraph */}
+      <section className="mx-auto max-w-6xl px-6 pt-24 md:pt-32">
+        <Greeting className="text-[clamp(2.4rem,6vw,4rem)] font-semibold tracking-tight" />
+        <p className="mt-6 max-w-[54rem] text-base font-normal leading-relaxed text-ink-soft [text-wrap:balance] md:text-lg">
           A senior product designer at{" "}
           <ExternalLink href={QUICKBOOKS_URL}>Intuit QuickBooks</ExternalLink>.
           Working across fintech, data, and AI, turning high-stakes, ambiguous
@@ -29,16 +29,20 @@ export function DockHome() {
           Best viewed by <InlineThemeToggle />.
         </p>
 
-        <p className="label mt-6 uppercase">Pick a project from the dock below.</p>
+        <p className="label mt-6 uppercase">
+          Hover a project to preview — click to dive in.
+        </p>
       </section>
 
-      {/* Dock — desktop / pointer-fine only */}
-      <div className="hidden justify-center px-6 pb-16 pt-32 md:flex md:pb-24 md:pt-40">
+      {/* Dock — desktop / pointer-fine only. Sits high so the preview card
+          (which opens below) and the footer stay above the fold. */}
+      <div className="hidden justify-center px-6 pt-16 md:flex md:pt-20">
         <Dock onOpen={(slug, rect) => setOpen({ slug, rect })} />
       </div>
 
-      {/* Mobile fallback — the calm list from Version A */}
-      <div className="pb-24 pt-12 md:hidden">
+      {/* Mobile fallback — the dock is pointer-only, so small screens get the
+          project list instead. */}
+      <div className="pb-24 pt-14 md:hidden">
         <WorkIndex />
       </div>
 

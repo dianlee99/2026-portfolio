@@ -4,6 +4,8 @@ import type { CSSProperties, ReactNode } from "react";
 import type { Project } from "@/data/projects";
 import { Reveal } from "@/components/Reveal";
 import { CaseMeta } from "@/components/case/CaseMeta";
+import { CaseHeroImage } from "@/components/case/CaseHeroImage";
+import { display } from "@/lib/displayFont";
 import {
   caseContentSectionClass,
   caseHeaderClass,
@@ -113,18 +115,26 @@ export function EurekaCase({ project }: { project: Project }) {
         <h1 className="max-w-3xl text-hero font-semibold">
           Designing the #1 survey app on iOS
         </h1>
-        <p className="mt-5 max-w-reading text-lg text-ink-soft">
+        <p className="mt-5 max-w-4xl text-lg text-ink-soft">
           {project.subtitle}
         </p>
-        <figure className="mt-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/work/${S}/hero.png`}
-            alt="Eureka Surveys app on iOS — survey dashboard, completion, and in-progress screens"
-            className="block w-full"
-          />
-        </figure>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-line px-2.5 py-0.5 text-xs text-ink-soft"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
       </header>
+
+      <CaseHeroImage
+        src={`/work/${S}/hero.png`}
+        alt="Eureka Surveys app on iOS — survey dashboard, completion, and in-progress screens"
+        priority
+      />
 
       <CaseMeta>
         {[
@@ -141,10 +151,11 @@ export function EurekaCase({ project }: { project: Project }) {
       </CaseMeta>
 
       {/* ── Impact lead ────────────────────────────────────── */}
-      <section className={`${caseImpactDividerClass} accent-bg`}>
+      <section className={`${caseImpactDividerClass} accent-bg border-t border-line`}>
         <div className={caseImpactSectionClass}>
         <Reveal>
-          <p className="max-w-reading text-title font-medium leading-snug">
+          <p className="label uppercase">TL;DR</p>
+          <p className="mt-4 max-w-4xl text-title font-semibold leading-snug text-ink">
             {project.impact}
           </p>
         </Reveal>
@@ -154,18 +165,21 @@ export function EurekaCase({ project }: { project: Project }) {
       {/* ── Metrics ────────────────────────────────────────── */}
       <section className={caseMetricsBorderClass}>
         <div className={caseMetricsInnerClass}>
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-10 sm:grid-cols-3">
           {project.metrics.map((m, i) => (
             <Reveal key={i} delay={i * 0.05}>
               <div>
-                <p className="text-hero font-semibold leading-none">
+                <p
+                  className={`${display.className} text-[clamp(2.5rem,7vw,4rem)] font-bold leading-none tracking-tight`}
+                  style={{ color: project.accent }}
+                >
                   {m.value === "iOS / Web" ? (
                     <PlatformLinks links={project.links} />
                   ) : (
                     m.value
                   )}
                 </p>
-                <p className="mt-2 text-sm text-ink-soft">{m.label}</p>
+                <p className="mt-3 text-sm text-ink-soft">{m.label}</p>
               </div>
             </Reveal>
           ))}
@@ -174,7 +188,7 @@ export function EurekaCase({ project }: { project: Project }) {
       </section>
 
       {/* ── Context + what I did ───────────────────────────── */}
-      <section className="accent-bg">
+      <section>
         <div className={caseContentSectionClass}>
         <Reveal>
           <p className="label uppercase">Context</p>

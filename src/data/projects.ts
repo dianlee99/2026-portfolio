@@ -59,8 +59,7 @@ export const projects: Project[] = [
     index: "01",
     client: "Intuit · QuickBooks",
     title: "Unconstrained invoicing",
-    subtitle:
-      "A from-scratch rethink of QuickBooks invoicing: edit, settings, and in-product design",
+    subtitle: "A from-scratch rethink of QuickBooks invoicing",
     summary:
       "Unconstrained rethink of QuickBooks invoicing—AI-built north-star prototype and production PRs shipped along the way.",
     year: "Q1 2026",
@@ -101,8 +100,7 @@ export const projects: Project[] = [
     index: "02",
     client: "Capital One · Data Platform",
     title: "A system of record for data usages",
-    subtitle:
-      "Building an internal data-usage registry to replace and decommission a costly third-party tool",
+    subtitle: "An internal system of record that replaced a costly third-party tool",
     summary:
       "Building an internal system of record for how the enterprise uses its data.",
     year: "2024–25",
@@ -133,15 +131,14 @@ export const projects: Project[] = [
     index: "03",
     client: "Capital One · Auto Refinance",
     title: "Redesigning the auto refinance journey",
-    subtitle:
-      "Rebuilding a high-stakes financial application to earn trust and win back mobile users",
+    subtitle: "Rebuilding a high-stakes application to win back mobile users",
     summary:
       "Guiding people through a high-stakes financial decision with clarity.",
     year: "Q2 2022",
     role: "Product Designer",
     duration: "Q2 2022",
     tags: ["Fintech", "Conversion", "Consumer", "Mobile"],
-    accent: "#d03027",
+    accent: "#0f766e",
     links: [
       {
         text: "Auto refinance",

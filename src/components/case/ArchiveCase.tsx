@@ -172,9 +172,19 @@ export function ArchiveCase({ project }: { project: Project }) {
       <header className={caseHeaderClass}>
         <p className="label mb-6 uppercase">{project.client}</p>
         <h1 className="max-w-3xl text-hero font-semibold">{project.title}</h1>
-        <p className="mt-5 max-w-reading text-lg text-ink-soft">
+        <p className="mt-5 max-w-4xl text-lg text-ink-soft">
           {project.subtitle}
         </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-line px-2.5 py-0.5 text-xs text-ink-soft"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
       </header>
 
       <div className={`${caseMetaWrapClass} ${caseSectionRuleYClass} mt-12`}>

@@ -4,6 +4,8 @@ import type { CSSProperties, ReactNode } from "react";
 import type { Project } from "@/data/projects";
 import { Reveal } from "@/components/Reveal";
 import { CaseMeta } from "@/components/case/CaseMeta";
+import { CaseHeroImage } from "@/components/case/CaseHeroImage";
+import { display } from "@/lib/displayFont";
 import {
   caseContentSectionClass,
   caseDividerInnerClass,
@@ -78,18 +80,26 @@ export function DataRegistryCase({ project }: { project: Project }) {
       <header className={caseHeaderClass}>
         <p className="label mb-6 uppercase">{project.client}</p>
         <h1 className="max-w-3xl text-hero font-semibold">{project.title}</h1>
-        <p className="mt-5 text-lg text-ink-soft md:whitespace-nowrap">
+        <p className="mt-5 max-w-4xl text-lg text-ink-soft">
           {project.subtitle}
         </p>
-        <figure className="mt-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/work/${S}/hero.png`}
-            alt="Data usage registry dashboard with search, status badges, and mapped datasets"
-            className="block w-full"
-          />
-        </figure>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-line px-2.5 py-0.5 text-xs text-ink-soft"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
       </header>
+
+      <CaseHeroImage
+        src={`/work/${S}/hero.png`}
+        alt="Data usage registry dashboard with search, status badges, and mapped datasets"
+        priority
+      />
 
       <CaseMeta>
         {[
@@ -105,10 +115,11 @@ export function DataRegistryCase({ project }: { project: Project }) {
         ))}
       </CaseMeta>
 
-      <section className="accent-bg">
+      <section className="accent-bg border-y border-line">
         <div className={caseImpactSpacedClass}>
           <Reveal>
-            <p className="max-w-reading text-title font-medium leading-snug">
+            <p className="label uppercase">TL;DR</p>
+            <p className="mt-4 max-w-4xl text-title font-semibold leading-snug text-ink">
               {project.impact}
             </p>
           </Reveal>
@@ -117,14 +128,17 @@ export function DataRegistryCase({ project }: { project: Project }) {
 
       <section className={caseMetricsBorderClass}>
         <div className={caseMetricsInnerClass}>
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-10 sm:grid-cols-3">
             {project.metrics.map((m, i) => (
               <Reveal key={i} delay={i * 0.05}>
                 <div>
-                  <p className="text-hero font-semibold leading-none">
+                  <p
+                    className={`${display.className} text-[clamp(2.5rem,7vw,4rem)] font-bold leading-none tracking-tight`}
+                    style={{ color: project.accent }}
+                  >
                     {m.value}
                   </p>
-                  <p className="mt-2 text-sm text-ink-soft">{m.label}</p>
+                  <p className="mt-3 text-sm text-ink-soft">{m.label}</p>
                 </div>
               </Reveal>
             ))}
@@ -133,15 +147,15 @@ export function DataRegistryCase({ project }: { project: Project }) {
       </section>
 
       {/* Context */}
-      <section className="accent-bg">
+      <section>
         <div className={caseContentSectionClass}>
         <Reveal>
-          <div className="max-w-reading">
+          <div>
             <p className="label uppercase">Context</p>
             <h2 className="mt-2 text-title font-semibold">
               A system of record for data usages
             </h2>
-            <p className="mt-4 leading-relaxed text-ink-soft">
+            <p className="mt-4 max-w-reading leading-relaxed text-ink-soft">
               {project.overview}
             </p>
           </div>

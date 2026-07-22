@@ -26,8 +26,8 @@ const config: Config = {
       },
       fontSize: {
         // Restrained grotesque scale — legibility over spectacle
-        "hero": ["clamp(2rem, 4.5vw, 3.5rem)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
-        "title": ["clamp(1.4rem, 2.6vw, 2rem)", { lineHeight: "1.2", letterSpacing: "-0.015em" }],
+        "hero": ["clamp(2.25rem, 5vw, 4rem)", { lineHeight: "1.05", letterSpacing: "-0.025em" }],
+        "title": ["clamp(1.6rem, 3.2vw, 2.6rem)", { lineHeight: "1.12", letterSpacing: "-0.02em" }],
       },
       maxWidth: {
         "reading": "62ch",

@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
   useSpring,
   useTransform,
   useAnimationControls,
-  AnimatePresence,
   type MotionValue,
 } from "framer-motion";
 import type { Project } from "@/data/projects";
-import { getCover } from "@/data/covers";
 import { ProjectGlyph } from "./ProjectGlyph";
 
 const BASE = 56; // resting icon size (px)
@@ -32,19 +30,15 @@ export function DockItem({
   index?: number; // position in the dock, for the staggered intro wave
   intro?: boolean; // play the one-time intro pop
   hoveredSlug: string | null;
-  onHoverChange: (slug: string | null) => void;
+  onHoverChange: (slug: string | null, centerX?: number | null) => void;
   inkFaint: string;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const [hovered, setHovered] = useState(false);
-  const [coverFailed, setCoverFailed] = useState(false);
-  const coverSrc = getCover(project.slug);
-  const showCover = Boolean(coverSrc) && !coverFailed;
   const isHovered = hoveredSlug === project.slug;
 
-  const setHover = (active: boolean) => {
-    setHovered(active);
-    if (active) onHoverChange(project.slug);
+  const enter = () => {
+    const rect = ref.current?.getBoundingClientRect();
+    onHoverChange(project.slug, rect ? rect.left + rect.width / 2 : null);
   };
 
   // distance from cursor to this icon's center
@@ -86,54 +80,6 @@ export function DockItem({
 
   return (
     <div data-dock-item className="relative flex flex-col items-center">
-      {/* tooltip bubble */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className={`pointer-events-none absolute bottom-full mb-4 -translate-x-0 overflow-hidden rounded-xl border border-line bg-paper text-left shadow-xl ${
-              showCover ? "w-64" : "w-56 px-4 py-3"
-            }`}
-          >
-            {showCover && (
-              <>
-                <span
-                  className="block h-0.5 w-full"
-                  style={{ backgroundColor: project.accent }}
-                  aria-hidden
-                />
-                <div className="h-24 overflow-hidden border-b border-line bg-paper-raised">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={coverSrc}
-                    alt=""
-                    className="h-full w-full object-cover"
-                    onError={() => setCoverFailed(true)}
-                  />
-                </div>
-              </>
-            )}
-            <div className={showCover ? "px-4 py-3" : undefined}>
-              <p className="text-[11px] uppercase tracking-wide text-ink-faint">
-                {project.year}
-                {project.locked ? " · Protected" : ""}
-              </p>
-              <p className="mt-0.5 text-sm font-semibold leading-tight">
-                {project.client}
-              </p>
-              <p className="mt-1 text-xs leading-snug text-ink-soft">
-                {project.summary}
-              </p>
-            </div>
-            {/* little pointer */}
-            <span className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-line bg-paper" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Intro-pop wrapper — `scale` here, independent of the width magnify. */}
       <motion.div
         animate={introControls}
@@ -144,15 +90,13 @@ export function DockItem({
           style={{ width: size, height: size }}
           animate={{
             boxShadow: isHovered
-              ? `0 0 0 1px color-mix(in srgb, ${project.accent} 22%, transparent), 0 4px 14px color-mix(in srgb, ${project.accent} 10%, transparent)`
+              ? "0 0 0 1px var(--line), 0 8px 20px color-mix(in srgb, var(--ink) 14%, transparent)"
               : "0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent)",
           }}
           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHovered(false)}
-          onFocus={() => setHover(true)}
+          onMouseEnter={enter}
+          onFocus={enter}
           onBlur={() => {
-            setHovered(false);
             if (hoveredSlug === project.slug) onHoverChange(null);
           }}
           onClick={() => {
@@ -167,8 +111,6 @@ export function DockItem({
                 ease: "easeOut",
               },
             });
-            // Fire immediately — DockHome bursts now and opens the window
-            // slightly later, so particles visibly erupt from the dock icon.
             onOpen(project.slug, rect);
           }}
           aria-label={`Open ${project.client}`}
@@ -179,11 +121,11 @@ export function DockItem({
         </motion.button>
       </motion.div>
 
-      {/* running-app dot — picks up the hovered project's accent */}
+      {/* running-app dot — a consistent neutral cue across every project */}
       <motion.span
         className="mt-1 h-1 w-1 rounded-full"
         animate={{
-          backgroundColor: isHovered ? project.accent : inkFaint,
+          backgroundColor: isHovered ? "var(--ink-soft)" : inkFaint,
         }}
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
         aria-hidden
