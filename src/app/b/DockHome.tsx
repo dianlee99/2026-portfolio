@@ -29,9 +29,6 @@ export function DockHome() {
           Best viewed by <InlineThemeToggle />.
         </p>
 
-        <p className="label mt-6 uppercase">
-          Hover a project to preview — click to dive in.
-        </p>
       </section>
 
       {/* Dock — desktop / pointer-fine only. Sits high so the preview card
