@@ -77,10 +77,13 @@ export function ProjectGlyph({
   // A real logo fills the entire tile (covers the rounded square, no letterbox).
   if (logoSrc) {
     return (
+      // Decorative: the parent button carries aria-label="Open {project}",
+      // so the logo itself is hidden from screen readers.
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={logoSrc}
         alt=""
+        aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover"
       />
     );

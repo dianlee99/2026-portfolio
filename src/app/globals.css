@@ -6,22 +6,38 @@
   /* Neutral, calm — near-black on white with gray secondary text.
      Soft/faint are kept a touch darker to stay legible at light font weights. */
   --paper: #ffffff;
-  --paper-raised: #f6f6f6;
+  /* Raised bands need enough separation to read as distinct sections.
+     #f6f6f6 was a ~3% step — technically there, visually invisible. */
+  --paper-raised: #f1f0ee;
   --ink: #141414;
   --ink-soft: #4a4a4a;
-  --ink-faint: #8f8f8f;
+  /* #767676 clears WCAG AA (4.54:1 on white) for the small captions/labels that
+     use it; #8f8f8f was only ~3.2:1 (large-text only). */
+  --ink-faint: #767676;
   --line: #e6e6e6;
   --accent: #141414; /* accent = ink; color is not used decoratively */
+  /* Editorial accent for case-study serif moments (headline word, metrics,
+     hero gradient). Per-project pages override --case-accent on their own
+     wrapper (see [style*="--case-accent-page"] below); this is the default. */
+  --case-accent: #C2410C; /* warm burnt orange */
+
+  /* Layered shadows — soft, cool, and tight like modern Framer/Webflow
+     templates. One ambient layer + one contact layer each. */
+  --shadow-sm: 0 1px 2px rgb(20 20 20 / 0.04), 0 2px 8px rgb(20 20 20 / 0.04);
+  --shadow-md: 0 2px 4px rgb(20 20 20 / 0.05), 0 12px 32px -8px rgb(20 20 20 / 0.10);
+  --shadow-lift: 0 4px 8px rgb(20 20 20 / 0.06), 0 24px 48px -12px rgb(20 20 20 / 0.16);
+  --glow: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgb(20 20 20 / 0.045),
+    transparent 70%
+  );
 }
 
-.dark {
-  --paper: #0d0d0d;
-  --paper-raised: #161616;
-  --ink: #f4f4f4;
-  --ink-soft: #b4b4b4;
-  --ink-faint: #767676;
-  --line: #262626;
-  --accent: #f4f4f4;
+/* Per-project accent override: a case wrapper sets --case-accent-page inline.
+   Custom properties resolve where they're DECLARED, so --case-accent must be
+   re-declared on the wrapper itself (not just inherited from :root). */
+[style*="--case-accent-page"] {
+  --case-accent: var(--case-accent-page);
 }
 
 * {
@@ -154,4 +170,47 @@ a {
   .animate-subtle-emphasis {
     animation: none;
   }
+}
+
+/* ── Craft utilities ──────────────────────────────────────────── */
+
+/* Layered shadow scale (see tokens above). */
+.shadow-token-sm { box-shadow: var(--shadow-sm); }
+.shadow-token-md { box-shadow: var(--shadow-md); }
+.shadow-token-lift { box-shadow: var(--shadow-lift); }
+
+/* Ambient glow behind the hero — one soft radial wash from the top. */
+.hero-glow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 70vh;
+  pointer-events: none;
+  background: var(--glow);
+}
+
+/* Card lift on hover — shadow + rise together, spring-ish ease. */
+.card-lift {
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+a:hover .card-lift,
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-lift,
+  a:hover .card-lift,
+  .card-lift:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Case-study editorial serif accent (Fraunces via CaseTheme). */
+.case-serif {
+  font-family: var(--font-case-serif), Georgia, serif;
+  font-weight: 600;
 }

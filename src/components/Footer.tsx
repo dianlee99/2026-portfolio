@@ -1,8 +1,9 @@
 export function Footer() {
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xl font-normal sm:flex-row sm:items-center sm:justify-between md:py-7">
-        <div className="flex flex-wrap gap-x-7 gap-y-1.5 text-ink">
+      {/* One quiet line — the dock is the page; the footer shouldn't compete. */}
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-7 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-ink-soft">
           <a href="mailto:dianlee99@gmail.com" className="link-underline">
             dianlee99@gmail.com
           </a>
@@ -23,7 +24,9 @@ export function Footer() {
             Résumé
           </a>
         </div>
-        <span className="italic text-ink-soft">Built with vibes, code, and love.</span>
+        <span className="italic text-ink-faint">
+          Designed by hand, built by vibes.
+        </span>
       </div>
     </footer>
   );

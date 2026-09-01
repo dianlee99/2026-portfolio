@@ -11,8 +11,8 @@ import {
 import type { Project } from "@/data/projects";
 import { ProjectGlyph } from "./ProjectGlyph";
 
-const BASE = 56; // resting icon size (px)
-const MAX = 96; // magnified size at cursor center
+const BASE = 68; // resting icon size (px)
+const MAX = 112; // magnified size at cursor center
 
 export function DockItem({
   project,

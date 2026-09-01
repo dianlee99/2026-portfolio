@@ -84,7 +84,7 @@ export function AboutName({
             </span>
 
             <span className="mt-3 block text-xs font-normal leading-relaxed text-ink-soft">
-              I design across fintech, data, and AI at Intuit QuickBooks —
+              I design across fintech, data, and AI at Intuit QuickBooks,
               turning ambiguous, high-stakes problems into products people trust.
             </span>
 

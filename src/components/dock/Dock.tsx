@@ -57,7 +57,7 @@ export function Dock({
           mouseX.set(Infinity);
           setPreview(null);
         }}
-        className="mx-auto flex h-24 w-fit items-end gap-4 rounded-3xl border border-line bg-paper-raised/70 px-5 pb-3 backdrop-blur-md"
+        className="shadow-token-md mx-auto flex h-28 w-fit items-end gap-5 rounded-3xl border border-line bg-paper-raised/70 px-6 pb-4 backdrop-blur-md"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}

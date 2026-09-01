@@ -2,7 +2,7 @@
 export const COVERS: Record<string, string> = {
   intuit: "/work/intuit/hero.png",
   "capital-one-data": "/work/capital-one-data/hero.png",
-  "capital-one-auto-refinance": "/work/capital-one-auto-refinance/hero.gif",
+  "capital-one-auto-refinance": "/work/capital-one-auto-refinance/hero-cover.jpg",
   "eureka-surveys": "/work/eureka-surveys/hero.png",
   archive: "/work/archive/warnermedia-1.png",
 };

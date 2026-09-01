@@ -35,7 +35,7 @@ export type Project = {
   year: string;
   role: string;
   tags: string[];
-  accent: string; // per-project accent color
+  accent: string; // kept for API compatibility — all projects use the neutral ink token
   locked?: boolean; // gate behind password
   // Optional rich meta (used by custom layouts, e.g. Eureka):
   subtitle?: string;
@@ -61,15 +61,14 @@ export const projects: Project[] = [
     title: "Unconstrained invoicing",
     subtitle: "A from-scratch rethink of QuickBooks invoicing",
     summary:
-      "Unconstrained rethink of QuickBooks invoicing—AI-built north-star prototype and production PRs shipped along the way.",
+      "~64% of invoices never get sent. A from-scratch rethink of QuickBooks invoicing, from AI-built prototype through shipped production PRs.",
     year: "Q1 2026",
     role: "Senior Product Designer",
     tags: ["Fintech", "0→1", "Design systems", "AI"],
-    accent: "#2ca01c",
-locked: true,
+    accent: "var(--ink)",
     links: [{ text: "QuickBooks", href: QUICKBOOKS_URL }],
     impact:
-      "Customers get lost on invoices and rarely send them. I led a north-star QuickBooks rethink to lift create-to-send.",
+      "~64% of researched invoices never get sent, with $13B+ stuck in drafts. I led the from-scratch rethink of QuickBooks invoicing to fix create-to-send.",
     overview:
       "At Intuit, I led an unconstrained rethink of the QuickBooks invoice editor.",
     contribution: [
@@ -91,9 +90,9 @@ locked: true,
       },
     ],
     strategic: [
-      "Create-to-send vs. showing every field — Prioritized line items and totals on the edit canvas; moved advanced and cohort-specific controls into Settings.",
-      "One editor vs. cohort-specific flows — Kept AE, MAIP, and merchant in a single invoice experience, with conditional payment sections instead of forking the product.",
-      "North-star vision vs. incremental rollout — Defined the full Edit · Settings · Design split upfront; shipped payments settings first while the Design tab targets a later release.",
+      "Create-to-send vs. showing every field: Prioritized line items and totals on the edit canvas; moved advanced and cohort-specific controls into Settings.",
+      "One editor vs. cohort-specific flows: Kept AE, MAIP, and merchant in a single invoice experience, with conditional payment sections instead of forking the product.",
+      "North-star vision vs. incremental rollout: Defined the full Edit · Settings · Design split upfront; shipped payments settings first while the Design tab targets a later release.",
     ],
   },
   {
@@ -103,17 +102,16 @@ locked: true,
     title: "A system of record for data usages",
     subtitle: "An internal system of record that replaced a costly third-party tool",
     summary:
-      "Building an internal system of record for how the enterprise uses its data.",
+      "Sole designer replacing a costly third-party tool: a 70-screen system of record for ~4,000 enterprise data usages.",
     year: "2024–25",
     role: "Senior Product Designer",
     duration: "Q4 2024 – Q1 2025",
     tags: ["Enterprise", "0→1", "Data governance", "Design systems"],
-    accent: "#004977",
-locked: true,
+    accent: "var(--ink)",
     impact:
-      "Sole designer on 70+ screens—built a system of record for ~4,000 data usages and decommissioned a third-party SaaS tool.",
+      "Sole designer on 70+ screens, building the system of record for ~4,000 data usages that let Capital One decommission a costly third-party SaaS tool.",
     overview:
-      "We designed for the analysts and engineers who need enterprise data that's easy to govern, find, and trust. The project built a new system of record for “data usages” — the reports, models, and systems that consume data to serve a business purpose.",
+      "I designed for the analysts and engineers who need enterprise data that's easy to govern, find, and trust: a new system of record for “data usages,” the reports, models, and systems that consume data to serve a business purpose.",
     contribution: [
       "Sole designer across 70+ desktop screens, end to end",
       "Reverse-engineered the legacy tool into flows, pain points, and requirements",
@@ -126,7 +124,11 @@ locked: true,
       { value: "70+", label: "Screens designed as the sole designer" },
       { value: "1", label: "Third-party tool fully decommissioned" },
     ],
-    strategic: [],
+    strategic: [
+      "Build vs. buy: Backed building in-house over renewing the vendor, since platform integration and customization won, at the cost of a fixed decommission deadline with one designer.",
+      "Density vs. approachability: Kept tables dense for the stewards who live in them; clarity came from color-coded status, priority, and risk badges, not from whitespace.",
+      "Speed vs. governance: Registration had to feel fast without skipping second-line risk review, so approval states became first-class UI instead of email threads.",
+    ],
   },
   {
     slug: "capital-one-auto-refinance",
@@ -135,12 +137,12 @@ locked: true,
     title: "Redesigning the auto refinance journey",
     subtitle: "Rebuilding a high-stakes application to win back mobile users",
     summary:
-      "Guiding people through a high-stakes financial decision with clarity.",
+      "A trust-first rebuild of a high-stakes application: +7.2% submit rate, worth ~$200MM in annual originations.",
     year: "Q2 2022",
     role: "Product Designer",
     duration: "Q2 2022",
     tags: ["Fintech", "Conversion", "Consumer", "Mobile"],
-    accent: "#0f766e",
+    accent: "var(--ink)",
     links: [
       {
         text: "Auto refinance",
@@ -148,9 +150,9 @@ locked: true,
       },
     ],
     impact:
-      "Redesigned Capital One's auto refinance journey to earn trust at every step, lifting sign-in-to-submit by 7.2% and application-to-contract by a statistically significant 4%.",
+      "Mobile brought 2× desktop's traffic but converted far worse. I rebuilt the journey around trust: +7.2% sign-in-to-submit, +4% application-to-contract, worth ~$200MM in annual originations.",
     overview:
-      "Auto refinance lets customers swap their car loan for a better rate and monthly payment. I led the end-to-end redesign across desktop and mobile, earning trust at each step through clarity and transparency.",
+      "Auto refinance lets customers swap their car loan for a better rate and monthly payment, but mobile, with twice desktop's traffic, converted far worse. I led the end-to-end redesign of pre-qualification, offers, and income verification across mobile and desktop.",
     contribution: [
       "Led the end-to-end redesign across desktop and mobile",
       "Turned exit surveys and call-center interviews into three design goals",
@@ -163,7 +165,11 @@ locked: true,
       { value: "+4%", label: "Application-to-contract (~$200MM originations)" },
       { value: "26→37%", label: "Finicity income-verification adoption" },
     ],
-    strategic: [],
+    strategic: [
+      "Physical vs. mental cost: Broke one long form into a guided stepper, so more taps meant less thinking. Completion rose despite more screens.",
+      "Honest vs. persuasive: Tested five ways to frame savings; the least salesy framing won. A plain comparison beat every persuasion pattern.",
+      "One flow vs. cohort forks: Kept single and joint borrowers in one journey with conditional steps instead of forking the application.",
+    ],
   },
   {
     slug: "eureka-surveys",
@@ -177,7 +183,7 @@ locked: true,
     role: "Lead Product Designer",
     duration: "Fall 2020",
     tags: ["Consumer", "Mobile", "Web", "0→1"],
-    accent: "#6b4eff",
+    accent: "var(--ink)",
     team: [
       "Binxin Xie (Product Designer, Columbia)",
       "Troy Feng (Software Engineer, Yale)",
@@ -194,16 +200,15 @@ locked: true,
       { text: "Web", href: "https://eurekasurveys.com/" },
     ],
     impact:
-      "Led design for the #1 iOS survey app—100K+ reviews, 4.8 stars.",
+      "Drove +200% user growth as lead designer of the #1 iOS survey app (100K+ reviews, 4.8 stars).",
     overview:
-      "Eureka Surveys is the #1 survey app on the iOS App Store (100K+ reviews, 4.8 stars) — a native app and web product where people earn cash and sweepstake entries for daily surveys. As lead product designer, I ran the end-to-end process from user research to shipping features.",
+      "Eureka is a native app and web product where people earn cash and sweepstake entries for daily surveys. As lead product designer at a five-person startup, I ran the end-to-end process from user research to shipping features across iOS and responsive web.",
     contribution: [
-      "Designing screens for iOS + responsive web",
-      "Conducting interviews and user testing",
-      "Analyzing research (i.e. competitor studies)",
-      "Ideating new functionalities",
-      "Designing the user flow and screens for client users (survey providers)",
-      "Designing miscellaneous pages (FAQ, landing page, terms & policy, blog) for SEO",
+      "Shipped iOS + responsive web screens end to end",
+      "Ran interviews and usability tests with survey takers",
+      "Analyzed competitors to sharpen the earning loop",
+      "Designed the client-side flows for survey providers",
+      "Built the SEO surface: landing, FAQ, blog, and policy pages",
     ],
     metrics: [
       { value: "#1", label: "Survey app on the iOS App Store" },
@@ -228,19 +233,22 @@ locked: true,
     year: "2019–20",
     role: "Design Intern",
     tags: ["Internships", "UX", "Research"],
-    accent: "#8a857b",
+    accent: "var(--ink)",
     impact:
-      "WarnerMedia, PNC, and Prudential shaped my early design work.",
+      "Three internships across media, banking, and insurance, where I learned to design inside real constraints.",
     overview:
       "Internships across media, finance, and design consulting: WarnerMedia, PNC, and Rightbrain × Prudential.",
     contribution: [],
-    metrics: [],
+    // Factual scope, not business impact — internships shouldn't claim outcomes.
+    metrics: [
+      { value: "3", label: "Internships across media, banking, and insurance" },
+    ],
     strategic: [],
     internships: [
       {
         company: "WarnerMedia",
         kind: "Mass Media Company",
-        body: "Selected to be their first and only UX intern, I worked at the Warner Innovation Lab, a growing hub of technology development in the lab, designed to create products that would promote fandom for shows on HBO or Warner Bros. (e.g. Euphoria). The lab has a heavy focus on using AI & Machine Learning tech to power a variety of products and prototypes.",
+        body: "Their first and only UX intern, embedded in the Warner Innovation Lab, a team prototyping AI and machine-learning products to deepen fandom for HBO and Warner Bros. titles like Euphoria.",
         role: "UX/Interaction Design Intern",
         duration: "3 months (Oct – Dec 2020)",
         links: [
@@ -258,7 +266,7 @@ locked: true,
       {
         company: "PNC",
         kind: "A Financial Institution",
-        body: "Summer 2020, everyone had to go virtual. Despite the chaos from the pandemic, new WFH policies, and the uncertain future, I was lucky enough to have the opportunity to work with PNC. I worked with their Mobile App team to redesign their mobile banking app, specifically the menu and rewards page, that would reach their 4 million online banking customers.",
+        body: "Summer 2020, fully remote. On PNC's Mobile App team, I redesigned the menu and rewards experiences in the banking app used by 4 million online banking customers.",
         role: "Digital Experience Design Intern",
         duration: "3 months (Jun – Aug 2020)",
         tools: "Sketch, InVision",
@@ -274,7 +282,7 @@ locked: true,
       {
         company: "Rightbrain × Prudential",
         kind: "Design Agency",
-        body: "During the summer of 2019, I had the opportunity to work with Prudential Life Insurance of Korea (POK) as part of the UX Consultant team at Rightbrain. With my team, I spent the summer conducting user research, running iterative workshops with the Prudential team, and working closely with UI designers & front-end engineers to design a new app. The app is aimed to increase the efficiency and quality of working lives of the Life Planners (LP), employees at Prudential.",
+        body: "A summer consulting for Prudential Life Insurance of Korea on Rightbrain's UX team, where I ran research and iterative client workshops, then worked alongside UI designers and front-end engineers on a new app for Prudential's Life Planners.",
         role: "UX Consultant Intern",
         duration: "3 months (Jun – Aug 2019)",
         tools: "Figma, ProtoPie",

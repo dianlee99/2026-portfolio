@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Manrope, JetBrains_Mono } from "next/font/google";
+import { Manrope, JetBrains_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 
@@ -19,7 +18,18 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
+// Fraunces — editorial serif accent. Used for accent words on case pages and
+// the homepage hero (the `.case-serif` class + var(--font-case-serif)).
+const serif = Fraunces({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-case-serif",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.dianlee.design"),
   title: "Dian Lee · Senior Product Designer",
   description:
     "Senior product designer working across fintech, data, and AI. Selected work from Intuit, Capital One, Eureka Surveys, and more.",
@@ -28,6 +38,14 @@ export const metadata: Metadata = {
     description:
       "Senior product designer working across fintech, data, and AI.",
     type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Dian Lee, Senior Product Designer" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dian Lee · Senior Product Designer",
+    description:
+      "Senior product designer working across fintech, data, and AI.",
+    images: ["/og.png"],
   },
 };
 
@@ -37,13 +55,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} flex min-h-screen flex-col`}>
-        <ThemeProvider>
-          <Nav />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </ThemeProvider>
+    <html lang="en">
+      <body className={`${sans.variable} ${mono.variable} ${serif.variable} flex min-h-screen flex-col`}>
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

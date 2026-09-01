@@ -1,385 +1,201 @@
-"use client";
-
-import type { CSSProperties, ReactNode } from "react";
 import type { Project } from "@/data/projects";
-import { Reveal } from "@/components/Reveal";
-import { CaseMeta } from "@/components/case/CaseMeta";
-import { CaseHeroImage } from "@/components/case/CaseHeroImage";
-import { display } from "@/lib/displayFont";
+import { CaseTheme } from "@/components/case/CaseTheme";
 import {
-  caseContentSectionClass,
-  caseDividerInnerClass,
-  caseDividerSectionClass,
-  caseHeaderClass,
-  caseImpactSpacedClass,
-  caseMetricsBorderClass,
-  caseMetricsInnerClass,
-  caseSectionDividedClass,
-  caseSectionDividedInnerClass,
-} from "@/components/case/caseLayout";
+  CaseHero,
+  CaseImpact,
+  Row,
+  Accent,
+  Heading,
+  Figure,
+  Decisions,
+} from "@/components/case/CaseKit";
+import { splitStrategic } from "@/components/case/strategic";
+import { CASE_ACCENTS } from "@/components/case/accents";
 
-const S = "capital-one-data";
+const S = "/work/capital-one-data";
 
-function Figure({
-  src,
-  alt,
-  caption,
-  className = "",
-  frameClassName = "",
-  imgClassName = "block w-full",
-}: {
-  src: string;
-  alt: string;
-  caption?: string;
-  className?: string;
-  frameClassName?: string;
-  imgClassName?: string;
-}) {
-  const img = (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img src={src} alt={alt} className={imgClassName} />
-  );
-
-  return (
-    <figure className={className}>
-      {frameClassName ? <div className={frameClassName}>{img}</div> : img}
-      {caption && (
-        <figcaption className="mt-2 text-sm leading-snug text-ink-faint">
-          {caption}
-        </figcaption>
-      )}
-    </figure>
-  );
-}
-
-function Flow({
-  n,
-  title,
-  children,
-}: {
-  n: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className={caseDividerSectionClass}>
-      <div className={caseDividerInnerClass}>
-        <div className="mb-8">
-          <p className="label uppercase">Flow · {n}</p>
-          <h2 className="mt-2 text-title font-semibold">{title}</h2>
-        </div>
-        <div className="space-y-8">{children}</div>
-      </div>
-    </section>
-  );
-}
+const FLOWS = [
+  {
+    n: "Registration",
+    title: "From emailed spreadsheets to a guided flow",
+    intro: (
+      <>
+        The old tool made users hand-enter up to{" "}
+        <span className="text-ink">3,800 elements</span> into spreadsheets and
+        email them to admins.
+      </>
+    ),
+    src: `${S}/Registration_Assets.gif`,
+    alt: "Guided data usage registration flow",
+    caption: "A guided registration flow, step-by-step through input assets",
+    outro: "Drawer to drill into a dataset without losing the full list.",
+  },
+  {
+    n: "Approve & Manage",
+    title: "A color-coded system for governance",
+    intro:
+      "Color-coded status, priority, risk, and assessment badges made dense governance easy to scan.",
+    src: `${S}/Approve.gif`,
+    alt: "Approve and manage data usages with color-coded badges",
+    caption: "Owner dashboard: published, awaiting approval, and draft usages",
+    outro:
+      "Owners got a dashboard to review, filter, and act on every usage. I aligned it with senior leadership repeatedly, since executives would approve inside the tool themselves.",
+  },
+  {
+    n: "Search & View",
+    title: "Prioritizing what people actually needed",
+    intro: "A card sort showed status and mapped datasets mattered most.",
+    src: `${S}/Search_3_output.gif`,
+    alt: "Search and view data usage details with status bar and mapped datasets",
+    caption: "Details page: status bar + mapped datasets",
+    outro: "Mapped datasets lead, with a color-coded status bar on top.",
+  },
+] as const;
 
 export function DataRegistryCase({ project }: { project: Project }) {
   return (
-    <div style={{ "--proj-accent": project.accent } as CSSProperties}>
-      <header className={caseHeaderClass}>
-        <p className="label mb-6 uppercase">{project.client}</p>
-        <h1 className="max-w-3xl text-hero font-semibold">{project.title}</h1>
-        <p className="mt-5 max-w-4xl text-lg text-ink-soft">
-          {project.subtitle}
-        </p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.tags.map((t) => (
-            <span
-              key={t}
-              className="rounded-full border border-line px-2.5 py-0.5 text-xs text-ink-soft"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-      </header>
-
-      <CaseHeroImage
-        src={`/work/${S}/hero.png`}
-        alt="Data usage registry dashboard with search, status badges, and mapped datasets"
-        priority
-      />
-
-      <CaseMeta>
-        {[
+    <CaseTheme accent={CASE_ACCENTS[project.slug]}>
+      <CaseHero
+        client={project.client}
+        headline={
+          <>
+            A system of record for <Accent>data usages</Accent>
+          </>
+        }
+        subtitle={project.subtitle ?? ""}
+        meta={[
           { label: "Role", value: project.role },
           { label: "Timeline", value: project.duration ?? project.year },
           { label: "Platform", value: "Desktop · Internal" },
           { label: "Team", value: "PM + 5 engineers" },
-        ].map((m) => (
-          <div key={m.label}>
-            <dt className="label mb-1">{m.label}</dt>
-            <dd className="text-ink-soft">{m.value}</dd>
-          </div>
-        ))}
-      </CaseMeta>
+        ]}
+        heroSrc={`${S}/hero.png`}
+        heroAlt="Data usage registry dashboard with search, status badges, and mapped datasets"
+      />
 
-      <section className="accent-bg border-y border-line">
-        <div className={caseImpactSpacedClass}>
-          <Reveal>
-            <p className="label uppercase">TL;DR</p>
-            <p className="mt-4 max-w-4xl text-title font-semibold leading-snug text-ink">
-              {project.impact}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className={caseMetricsBorderClass}>
-        <div className={caseMetricsInnerClass}>
-          <div className="grid gap-10 sm:grid-cols-3">
-            {project.metrics.map((m, i) => (
-              <Reveal key={i} delay={i * 0.05}>
-                <div>
-                  <p
-                    className={`${display.className} text-[clamp(2.5rem,7vw,4rem)] font-bold leading-none tracking-tight`}
-                    style={{ color: project.accent }}
-                  >
-                    {m.value}
-                  </p>
-                  <p className="mt-3 text-sm text-ink-soft">{m.label}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CaseImpact statement={project.impact} metrics={project.metrics} />
 
       {/* Context */}
-      <section>
-        <div className={caseContentSectionClass}>
-        <Reveal>
-          <div>
-            <p className="label uppercase">Context</p>
-            <h2 className="mt-2 text-title font-semibold">
-              A system of record for data usages
-            </h2>
-            <p className="mt-4 max-w-reading leading-relaxed text-ink-soft">
-              {project.overview}
-            </p>
-          </div>
-        </Reveal>
-        <Reveal delay={0.04}>
-          <Figure
-            className="mx-auto mt-8 w-full max-w-[88%] md:max-w-[82%]"
-            src={`/work/${S}/data-usage-diagram.png`}
-            alt="Diagram showing datasets feeding elements consumed into a data usage and data outputs"
-            imgClassName="mx-auto block w-full"
-          />
-        </Reveal>
-        <Reveal delay={0.06}>
-          <p className="mt-10 max-w-reading leading-relaxed text-ink-soft md:mt-12">
-            A <span className="text-ink">data usage</span> consumes elements
-            from one or more datasets to produce an output. Here&apos;s an
-            example.
-          </p>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <Figure
-            className="mx-auto mt-6 w-full max-w-[88%] md:max-w-[82%]"
-            src={`/work/${S}/data-usage-example.png`}
-            alt="Example flow from customer income dataset through Ability to Pay assessment to a new credit line"
-            imgClassName="mx-auto block w-full"
-          />
-        </Reveal>
-        </div>
-      </section>
+      <Row label="Context">
+        <Heading lead={project.overview}>
+          Nobody could say what the data was actually used for.
+        </Heading>
+        <Figure
+          className="mx-auto mt-10 w-full max-w-[82%]"
+          src={`${S}/data-usage-diagram.png`}
+          alt="Diagram showing datasets feeding elements consumed into a data usage and data outputs"
+          imgClassName="mx-auto block w-full"
+        />
+        <p className="mt-10 max-w-xl leading-relaxed text-ink-soft">
+          A <span className="text-ink">data usage</span> consumes elements from
+          one or more datasets to produce an output. Here&apos;s an example.
+        </p>
+        <Figure
+          className="mx-auto mt-6 w-full max-w-[82%]"
+          src={`${S}/data-usage-example.png`}
+          alt="Example flow from customer income dataset through Ability to Pay assessment to a new credit line"
+          imgClassName="mx-auto block w-full"
+        />
+      </Row>
 
       {/* Problem */}
-      <section className={caseDividerSectionClass}>
-        <div className={caseDividerInnerClass}>
-        <Reveal>
-          <p className="label uppercase">Problem</p>
-          <h2 className="mt-2 text-title font-semibold">
-            A costly, disconnected legacy platform
-          </h2>
-          <p className="mt-4 max-w-reading leading-relaxed text-ink-soft">
-            Capital One used a third-party tool to manage{" "}
-            <span className="text-ink">~4,000 data usages</span> — including
-            hundreds of high-priority usages and tens of thousands of
-            high-priority data elements. Workflows were disconnected from the
-            internal data platform, the UI was slow and manual, and the vendor
-            was migrating to a costly SaaS model.
-          </p>
-          <p className="mt-4 max-w-reading leading-relaxed text-ink-soft">
-            We chose to build a new system of record, integrated into
-            Capital One&apos;s internal data platform — for cost, control, and
-            the customization a bought tool couldn&apos;t offer.
-          </p>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <Figure
-            className="mt-8"
-            src={`/work/${S}/legacy-platform.png`}
-            alt="The third-party Enterprise Data Management tool for data usages"
-            caption="The third-party tool we replaced: dense tables, manual filters, no platform integration"
-          />
-        </Reveal>
-        </div>
-      </section>
+      <Row label="Problem">
+        <Heading>We were paying a vendor for workflows nobody wanted to use.</Heading>
+        <p className="mt-5 max-w-xl leading-relaxed text-ink-soft">
+          Capital One used a third-party tool to manage{" "}
+          <span className="text-ink">~4,000 data usages</span>, including
+          hundreds of high-priority usages and tens of thousands of high-priority
+          data elements. Workflows were disconnected from the internal data
+          platform, the UI was slow and manual, and the vendor was migrating to a
+          costly SaaS model.
+        </p>
+        <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">
+          We chose to build a new system of record, integrated into Capital
+          One&apos;s internal data platform, for cost, control, and the
+          customization a bought tool couldn&apos;t offer.
+        </p>
+        <Figure
+          className="mt-8"
+          src={`${S}/legacy-platform.png`}
+          alt="The third-party Enterprise Data Management tool for data usages"
+          caption="The third-party tool we replaced: dense tables, manual filters, no platform integration"
+        />
+      </Row>
 
       {/* Timeline + Role */}
-      <section className={caseDividerSectionClass}>
-        <div className={caseDividerInnerClass}>
+      <Row label="Team & timeline">
         <div className="grid gap-12 md:grid-cols-2">
-          <Reveal>
-            <div>
-              <h2 className="text-title font-semibold">Timeline</h2>
-              <p className="mt-4 leading-relaxed text-ink-soft">
-                Onboarding to production launch and full decommission of the
-                third-party tool in ~9 months (mid-2024 to mid-2025).
-              </p>
-            </div>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <div>
-              <h2 className="text-title font-semibold">My role</h2>
-              <p className="mt-4 leading-relaxed text-ink-soft">
-                <span className="text-ink">
-                  Sole designer across 70+ screens.
-                </span>{" "}
-                I led end-to-end desktop design in tight “parallel-path”
-                lockstep with product and 5+ engineers.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-        </div>
-      </section>
-
-      {/* Research */}
-      <section className={caseDividerSectionClass}>
-        <div className={caseDividerInnerClass}>
-        <Reveal>
-          <div className="max-w-reading">
-            <p className="label uppercase">Research</p>
-            <h2 className="mt-2 text-title font-semibold">
-              Reverse-engineering the old tool
-            </h2>
+          <div>
+            <h3 className="text-xl font-semibold">Timeline</h3>
             <p className="mt-4 leading-relaxed text-ink-soft">
-              I reverse-engineered the old tool — mapping every flow, pain
-              point, and requirement — and studied our internal patterns so new
-              ones would align. The audience was broad: first-line consumers,
-              producers, and leadership, plus second-line stewards, risk
-              officers, and validators.
+              Onboarding to production launch and full decommission of the
+              third-party tool in ~9 months (mid-2024 to mid-2025).
             </p>
           </div>
-        </Reveal>
-        <Reveal delay={0.04}>
-          <div className="mt-6 flex items-start gap-5 md:gap-6">
-            <figure className="min-w-0 flex-[1.8]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`/work/${S}/research-user-flow.png`}
-                alt="Brain dump mapping create, approve, search, and edit user flows"
-                className="block h-56 w-full object-contain object-left md:h-72 lg:h-80"
-              />
-              <figcaption className="mt-2 text-sm leading-snug text-ink-faint">
-                User flow brain dump
-              </figcaption>
-            </figure>
-            <figure className="min-w-0 flex-1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`/work/${S}/research-notes.png`}
-                alt="Handwritten research notes and early UI sketches in a notebook"
-                className="block h-56 w-full object-contain object-left md:h-72 lg:h-80"
-              />
-              <figcaption className="mt-2 text-sm leading-snug text-ink-faint">
-                Research notes
-              </figcaption>
-            </figure>
+          <div>
+            <h3 className="text-xl font-semibold">My role</h3>
+            <p className="mt-4 leading-relaxed text-ink-soft">
+              <span className="text-ink">Sole designer across 70+ screens.</span>{" "}
+              I led end-to-end desktop design in tight &ldquo;parallel-path&rdquo;
+              lockstep with product and 5+ engineers.
+            </p>
           </div>
-        </Reveal>
         </div>
-      </section>
+      </Row>
 
-      {/* Flow 1 — Registration */}
-      <Flow n="Registration" title="From emailed spreadsheets to a guided flow">
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            The old tool made users hand-enter up to{" "}
-            <span className="text-ink">3,800 elements</span> into spreadsheets
-            and email them to admins.
-          </p>
-        </Reveal>
-        <Reveal>
+      {/* Research */}
+      <Row label="Research">
+        <Heading>So I took the old tool apart to see what it was hiding.</Heading>
+        <p className="mt-5 max-w-xl leading-relaxed text-ink-soft">
+          I reverse-engineered the old tool, mapping every flow, pain point, and
+          requirement, then studied our internal patterns so new ones would
+          align. The audience was broad: first-line consumers, producers, and
+          leadership, plus second-line stewards, risk officers, and validators.
+        </p>
+        <div className="mt-8 grid items-start gap-6 md:grid-cols-[1.8fr_1fr]">
           <Figure
-            src={`/work/${S}/Registration_Assets.gif`}
-            alt="Guided data usage registration flow"
-            caption="A guided registration flow — step-by-step through input assets"
+            src={`${S}/research-user-flow.png`}
+            alt="Brain dump mapping create, approve, search, and edit user flows"
+            imgClassName="block h-56 w-full object-contain object-left md:h-72"
+            caption="User flow brain dump"
           />
-        </Reveal>
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            Drawer to drill into a dataset without losing the full list.
-          </p>
-        </Reveal>
-      </Flow>
+          <Figure
+            src={`${S}/research-notes.jpg`}
+            alt="Handwritten research notes and early UI sketches in a notebook"
+            imgClassName="block h-56 w-full object-contain object-left md:h-72"
+            caption="Research notes"
+          />
+        </div>
+      </Row>
 
-      {/* Flow 2 — Approve and Manage */}
-      <Flow n="Approve & Manage" title="A color-coded system for governance">
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            Color-coded status, priority, risk, and assessment badges made dense
-            governance easy to scan.
-          </p>
-        </Reveal>
-        <Reveal>
-          <Figure
-            src={`/work/${S}/Approve.gif`}
-            alt="Approve and manage data usages with color-coded badges"
-            caption="Owner dashboard: published, awaiting approval, and draft usages"
-          />
-        </Reveal>
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            Owners got a dashboard to review, filter, and act on every usage. I
-            aligned it with senior leadership repeatedly, since executives would
-            approve inside the tool themselves.
-          </p>
-        </Reveal>
-      </Flow>
+      <Decisions items={splitStrategic(project.strategic)} />
 
-      {/* Flow 3 — Search and View */}
-      <Flow n="Search & View" title="Prioritizing what people actually needed">
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            A card sort showed status and mapped datasets mattered most.
-          </p>
-        </Reveal>
-        <Reveal>
+      {/* Flows */}
+      {FLOWS.map((f) => (
+        <Row key={f.n} label={`Flow · ${f.n}`}>
+          <Heading>{f.title}</Heading>
+          <p className="mt-5 max-w-xl leading-relaxed text-ink-soft">{f.intro}</p>
           <Figure
-            src={`/work/${S}/Search_3_output.gif`}
-            alt="Search and view data usage details with status bar and mapped datasets"
-            caption="Details page: status bar + mapped datasets"
+            className="mt-8"
+            src={f.src}
+            alt={f.alt}
+            caption={f.caption}
           />
-        </Reveal>
-        <Reveal>
-          <p className="max-w-reading leading-relaxed text-ink-soft">
-            Mapped datasets lead, with a color-coded status bar on top.
-          </p>
-        </Reveal>
-      </Flow>
+          <p className="mt-6 max-w-xl leading-relaxed text-ink-soft">{f.outro}</p>
+        </Row>
+      ))}
 
       {/* Impact */}
-      <section className={caseSectionDividedClass}>
-        <div className={caseSectionDividedInnerClass}>
-        <Reveal>
-          <p className="label uppercase">Impact</p>
-          <h2 className="mt-2 text-title font-semibold">
-            From third-party tool to internal system of record
-          </h2>
-          <p className="mt-4 max-w-reading leading-relaxed text-ink-soft">
-            We shipped a new internal data-usage inventory built in-house,
-            contributed new patterns and component hierarchy back to the
-            platform, and got positive early feedback on visibility and
-            governance — enough to fully decommission the third-party SaaS tool.
-          </p>
-        </Reveal>
-        </div>
-      </section>
-    </div>
+      <Row label="Impact">
+        <Heading>We turned the vendor tool off.</Heading>
+        <p className="mt-5 max-w-xl leading-relaxed text-ink-soft">
+          I shipped a new internal data-usage inventory built in-house and
+          contributed new patterns and component hierarchy back to the platform.
+          Positive early feedback on visibility and governance was enough to
+          fully decommission the third-party SaaS tool.
+        </p>
+      </Row>
+      <div className="h-16" />
+    </CaseTheme>
   );
 }

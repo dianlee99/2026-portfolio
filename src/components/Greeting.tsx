@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Hanken_Grotesk } from "next/font/google";
 
-// Display face for the homepage greeting only — the rest of the site is Manrope.
-const display = Bricolage_Grotesque({
+// Hanken Grotesk — the same grotesque the case pages use, so the homepage hero
+// previews the case-page type system (grotesque headline + Fraunces accent).
+const display = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -40,7 +41,10 @@ export function Greeting({ className }: { className?: string }) {
 
   return (
     <h1 className={`${display.className} ${className ?? ""} leading-[1.05]`}>
-      {greeting ? `${greeting}, ` : ""}I&apos;m Dian{" "}
+      {greeting ? `${greeting}, ` : ""}I&apos;m{" "}
+      {/* Fraunces italic accent — the case-page treatment — but in ink, so the
+          homepage stays neutral while the case pages carry the color. */}
+      <span className="case-serif italic">Dian</span>{" "}
       <button
         type="button"
         onClick={speakName}

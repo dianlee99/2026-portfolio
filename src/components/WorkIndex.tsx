@@ -29,7 +29,7 @@ export function WorkIndex() {
             <article>
               <Link href={`/work/${p.slug}`} className="group block">
                 {/* Cover */}
-                <div className="relative overflow-hidden rounded-xl border border-line bg-paper-raised">
+                <div className="card-lift relative overflow-hidden rounded-xl border border-line bg-paper-raised">
                   <span
                     className="absolute inset-x-0 top-0 z-10 h-1 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
                     style={{ backgroundColor: p.accent }}
